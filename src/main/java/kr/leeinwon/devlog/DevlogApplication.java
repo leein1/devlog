@@ -10,4 +10,7 @@ public class DevlogApplication {
         SpringApplication.run(DevlogApplication.class, args);
     }
 
+    /*
+    테스트
+     */
 }
