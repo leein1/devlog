@@ -9,24 +9,25 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(name = "comments")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-
-public class User {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 100)
-    private String email;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
 
-    @Column(nullable = false, length = 255)
-    private String password;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Column(nullable = false, length = 50)
-    private String nickname;
+    @Column(nullable = true, columnDefinition = "TEXT")
+    private String content;
 
     @Column(nullable = false, name = "created_at")
     private LocalDateTime createdAt;
@@ -35,10 +36,12 @@ public class User {
     private LocalDateTime updatedAt;
 
     @Builder
-    private User(String email, String password, String nickname){
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
+    private Comment(Post post, User user, String content) {
+
+        this.post = post;
+        this.user = user;
+        this.content = content;
         this.createdAt = LocalDateTime.now();
+        this.updatedAt = null;
     }
 }
