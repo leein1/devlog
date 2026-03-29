@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
-public class User {
+public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,17 +28,10 @@ public class User {
     @Column(nullable = false, length = 50)
     private String nickname;
 
-    @Column(nullable = false, name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(nullable = true, name = "updated_at")
-    private LocalDateTime updatedAt;
-
     @Builder
     private User(String email, String password, String nickname){
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        this.createdAt = LocalDateTime.now();
     }
 }

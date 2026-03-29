@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "comments")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment {
+public class Comment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,19 +29,11 @@ public class Comment {
     @Column(nullable = true, columnDefinition = "TEXT")
     private String content;
 
-    @Column(nullable = false, name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(nullable = true, name = "updated_at")
-    private LocalDateTime updatedAt;
-
     @Builder
     private Comment(Post post, User user, String content) {
 
         this.post = post;
         this.user = user;
         this.content = content;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = null;
     }
 }

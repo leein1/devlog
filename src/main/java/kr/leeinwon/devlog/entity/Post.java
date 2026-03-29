@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "posts")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Post {
+public class Post extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,12 +35,6 @@ public class Post {
     @Column(nullable = false, name = "view_count")
     private int viewCount;
 
-    @Column(nullable = false, name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(nullable = true, name = "updated_at")
-    private LocalDateTime updatedAt;
-
     @Builder
     private Post(User user, Category category, String title, String content) {
         this.user = user;
@@ -48,7 +42,5 @@ public class Post {
         this.title = title;
         this.content = content;
         this.viewCount = 0;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = null;
     }
 }
