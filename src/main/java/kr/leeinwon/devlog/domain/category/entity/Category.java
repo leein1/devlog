@@ -1,4 +1,4 @@
-package kr.leeinwon.devlog.entity;
+package kr.leeinwon.devlog.domain.category.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

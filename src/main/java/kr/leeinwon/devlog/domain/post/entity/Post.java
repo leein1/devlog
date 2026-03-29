@@ -1,12 +1,13 @@
-package kr.leeinwon.devlog.entity;
+package kr.leeinwon.devlog.domain.post.entity;
 
 import jakarta.persistence.*;
+import kr.leeinwon.devlog.global.common.BaseTimeEntity;
+import kr.leeinwon.devlog.domain.category.entity.Category;
+import kr.leeinwon.devlog.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "posts")

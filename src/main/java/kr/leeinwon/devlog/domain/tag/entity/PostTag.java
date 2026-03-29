@@ -1,16 +1,18 @@
-package kr.leeinwon.devlog.entity;
+package kr.leeinwon.devlog.domain.tag.entity;
 
 import jakarta.persistence.*;
+import kr.leeinwon.devlog.domain.post.entity.Post;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "post_series")
+@Table(name = "post_tags")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostSeries {
+public class PostTag {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,16 +22,12 @@ public class PostSeries {
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "series_id")
-    private Series series;
-
-    @Column(nullable = false, name = "order_num")
-    private int orderNum;
+    @JoinColumn(name = "tag_id")
+    private Tag tag;
 
     @Builder
-    private PostSeries(Post post, Series series, int orderNum) {
+    private PostTag(Post post, Tag tag) {
         this.post = post;
-        this.series = series;
-        this.orderNum = orderNum;
+        this.tag = tag;
     }
 }

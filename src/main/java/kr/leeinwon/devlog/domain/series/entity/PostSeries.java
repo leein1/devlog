@@ -1,19 +1,17 @@
-package kr.leeinwon.devlog.entity;
+package kr.leeinwon.devlog.domain.series.entity;
 
 import jakarta.persistence.*;
+import kr.leeinwon.devlog.domain.post.entity.Post;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity
-@Table(name = "comments")
+@Table(name = "post_series")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment extends BaseTimeEntity {
-
+public class PostSeries {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,17 +21,16 @@ public class Comment extends BaseTimeEntity {
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "series_id")
+    private Series series;
 
-    @Column(nullable = true, columnDefinition = "TEXT")
-    private String content;
+    @Column(nullable = false, name = "order_num")
+    private int orderNum;
 
     @Builder
-    private Comment(Post post, User user, String content) {
-
+    private PostSeries(Post post, Series series, int orderNum) {
         this.post = post;
-        this.user = user;
-        this.content = content;
+        this.series = series;
+        this.orderNum = orderNum;
     }
 }
