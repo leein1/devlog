@@ -12,6 +12,8 @@ public class PostResponse {
     private final String title;
     private final String content;
     private final int veiwCount;
+    private final Long categoryId;
+    private final String categoryName;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
@@ -20,6 +22,8 @@ public class PostResponse {
         this.title = post.getTitle();
         this.content = post.getContent();
         this.veiwCount = post.getViewCount();
+        this.categoryId = post.getCategory().getId();
+        this.categoryName = post.getCategory().getName();
         this.createdAt = post.getCreatedAt();
         this.updatedAt = post.getUpdatedAt();
     }
