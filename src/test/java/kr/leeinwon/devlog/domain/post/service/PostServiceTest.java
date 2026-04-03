@@ -87,8 +87,10 @@ public class PostServiceTest {
 
         given(entityManager.getReference(Category.class, 1L)).willReturn(category);
         given(postRepository.save(any(Post.class))).willReturn(post);
+
         //when
         PostResponse postResponse = postService.createPost(postRequest);
+        log.info("postResponse_category_id={}", postResponse.getCategoryId());
 
         //then
         assertThat(postResponse.getTitle()).isEqualTo("제목");
@@ -104,10 +106,7 @@ public class PostServiceTest {
         Post post = createPost(1L, "제목", "내용",  category);
 
         given(entityManager.getReference(Category.class, 2L)).willReturn(category);
-        log.info("category name={}, id={}", category.getName(), category.getId());
         given(postRepository.save(any(Post.class))).willReturn(post);
-        log.info("post title={}, content={}, categoryId={}"
-                , post.getTitle(), post.getContent(), post.getCategory().getId());
 
         //when
         PostResponse postResponse = postService.createPost(postRequest);
