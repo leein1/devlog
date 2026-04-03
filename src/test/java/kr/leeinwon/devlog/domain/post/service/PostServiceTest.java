@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -23,6 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -145,4 +147,66 @@ public class PostServiceTest {
                 .hasMessageContaining("게시물 존재하지 않음");
     }
 
+    @Test
+    void 게시글_목록_조회(){
+        //given
+        Category category = createCategory(1L, "미분류");
+        Post post1 = createPost(1L, "제목1", "내용1", category);
+        Post post2 = createPost(2L, "제목2", "내용2", category);
+        given(postRepository.findAll()).willReturn(List.of(post1,post2));
+
+        //whenn
+        List<PostResponse> postResponses = postService.getAllPost();
+
+        //then
+        assertThat(postResponses).hasSize(2);
+        assertThat(postResponses.get(0).getTitle()).isEqualTo("제목1");
+        assertThat(postResponses.get(1).getTitle()).isEqualTo("제목2");
+    }
+
+    @Test
+    void 게시글_수정_성공(){
+        //given
+        Category category = createCategory(1L, "미분류");
+        Post post = createPost(1L, "수정 전 제목", "수정 전 내용", category);
+        PostRequest postRequest = createPostRequest("수정 후 제목", "수정 후 내용", null);
+
+        given(postRepository.findById(1L)).willReturn(Optional.of(post));
+        given(entityManager.getReference(Category.class, 1L)).willReturn(category);
+
+        //when
+        PostResponse postResponse = postService.updatePost(1L, postRequest);
+
+        //then
+        assertThat(postResponse.getTitle()).isEqualTo("수정 후 제목");
+        assertThat(postResponse.getContent()).isEqualTo("수정 후 내용");
+    }
+
+    @Test
+    void 게시글_삭제_성공(){
+        //given
+        Category category = createCategory(1L, "미분류");
+        Post post = createPost(1l,"제목", "내용", category);
+        given(postRepository.findById(1L)).willReturn(Optional.of(post));
+
+        //when
+        postService.deletePost(1L);
+
+        //then
+        verify(postRepository).delete(post);
+    }
+
+    @Test
+    void 게시글_삭제_미존재_예외(){
+        //given
+        given(postRepository.findById(1L)).willReturn(Optional.empty());
+
+        //when
+        assertThatThrownBy(() -> postService.deletePost(1L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("게시글 존재하지 않아 삭제 불가");
+        //then
+
+
+    }
 }
