@@ -1,6 +1,7 @@
 package kr.leeinwon.devlog.domain.post.service;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import kr.leeinwon.devlog.domain.category.entity.Category;
 import kr.leeinwon.devlog.domain.post.dto.PostRequest;
 import kr.leeinwon.devlog.domain.post.dto.PostResponse;
@@ -13,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -115,6 +117,32 @@ public class PostServiceTest {
         assertThat(postResponse.getTitle()).isEqualTo("제목");
         assertThat(postResponse.getContent()).isEqualTo("내용");
         verify(postRepository).save(any(Post.class));
+    }
+
+    @Test
+    void 게시글_단건_조회_성공(){
+        //given
+        Category category = createCategory(1L, "미분류");
+        Post post = createPost(1L, "제목", "내용", category);
+        given(postRepository.findById(1L)).willReturn(Optional.of(post));
+
+        //when
+        PostResponse postResponse = postService.getPost(1L);
+
+        //then
+        assertThat(postResponse.getId()).isEqualTo(1L);
+        assertThat(postResponse.getTitle()).isEqualTo("제목");
+    }
+
+    @Test
+    void 게시글_단건_조회_예외(){
+        //given
+        given(postRepository.findById(1L)).willReturn(Optional.empty());
+
+        //when then
+        assertThatThrownBy(() -> postService.getPost(1L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("게시물 존재하지 않음");
     }
 
 }
