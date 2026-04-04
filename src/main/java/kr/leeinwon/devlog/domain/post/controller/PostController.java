@@ -6,6 +6,7 @@ import kr.leeinwon.devlog.domain.post.dto.PostResponse;
 import kr.leeinwon.devlog.domain.post.repository.PostRepository;
 import kr.leeinwon.devlog.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,14 @@ public class PostController {
     @GetMapping
     public ResponseEntity<List<PostResponse>> getAllPosts(){
         return ResponseEntity.ok(postService.getAllPost());
+    }
+
+    @GetMapping
+    public ResponseEntity<List<PostResponse>> getPosts(
+            @RequestParam(required = false) Long cursor
+            ,@RequestParam(defaultValue = "10") int size){
+
+        return  ResponseEntity.ok(postService.getPosts(cursor, size));
     }
 
     @PutMapping("/{id}")

@@ -7,6 +7,8 @@ import kr.leeinwon.devlog.domain.post.dto.PostResponse;
 import kr.leeinwon.devlog.domain.post.entity.Post;
 import kr.leeinwon.devlog.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,6 +61,21 @@ public class PostService {
        return postRepository.findAll().stream()
 //                .map(PostResponse::new)
                .map(Post -> new PostResponse(Post))
+                .collect(Collectors.toList());
+    }
+
+    public List<PostResponse> getPosts(Long cursor, int size){
+        Pageable pageable = PageRequest.of(0, size);
+        List<Post> posts;
+
+        if(cursor == null){
+            posts = postRepository.findAllByOrderByIdDesc(pageable);
+        } else {
+            posts = postRepository.findByIdLessThanOrderByIdDesc(cursor, pageable);
+        }
+
+        return posts.stream()
+                .map(PostResponse::new)
                 .collect(Collectors.toList());
     }
 
