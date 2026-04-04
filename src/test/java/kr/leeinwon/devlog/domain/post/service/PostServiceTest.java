@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -162,6 +163,24 @@ public class PostServiceTest {
         assertThat(postResponses).hasSize(2);
         assertThat(postResponses.get(0).getTitle()).isEqualTo("제목1");
         assertThat(postResponses.get(1).getTitle()).isEqualTo("제목2");
+    }
+
+    @Test
+    void 첫_페이지_조회_cursor_null(){
+        //given
+        Category category = createCategory(1L, "미분류");
+        Post post1 = createPost(1L, "제목1","내용2", category);
+        Post post2 = createPost(2L, "제목2","내용2", category);
+
+        given(postRepository.findAllByOrderByIdDesc(any(Pageable.class)))
+                .willReturn(List.of(post1,post2));
+
+        //when
+        List<PostResponse> postResponses = postService.getPosts(null, 10);
+        //then
+        assertThat(postResponses).hasSize(2);
+        assertThat(postResponses.get(0).getId()).isEqualTo(2L);
+        verify(postRepository).findAllByOrderByIdDesc(any(Pageable.class));
     }
 
     @Test
