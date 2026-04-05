@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.ArgumentMatchers.any;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -173,14 +174,38 @@ public class PostServiceTest {
         Post post2 = createPost(2L, "제목2","내용2", category);
 
         given(postRepository.findAllByOrderByIdDesc(any(Pageable.class)))
-                .willReturn(List.of(post1,post2));
+                .willReturn(List.of(post2,post1));
 
         //when
         List<PostResponse> postResponses = postService.getPosts(null, 10);
+        log.info("List [0] : {}, List [1]: {}", postResponses.get(0).getId(), postResponses.get(1).getId());
+        /*
+        현재 오름차순으로 가져오는 문제 있음
+         */
+
+
         //then
         assertThat(postResponses).hasSize(2);
         assertThat(postResponses.get(0).getId()).isEqualTo(2L);
         verify(postRepository).findAllByOrderByIdDesc(any(Pageable.class));
+    }
+
+    @Test
+    void 다음_페이지_조회_cursor보다_작은_id만() {
+        // given
+        Category category = createCategory(1L, "미분류");
+        Post post1 = createPost(1L, "제목1", "내용1", category);
+
+        given(postRepository.findByIdLessThanOrderByIdDesc(eq(2L), any(Pageable.class)))
+                .willReturn(List.of(post1));
+
+        // when
+        List<PostResponse> responses = postService.getPosts(2L, 10);
+
+        // then
+        assertThat(responses).hasSize(1);
+        assertThat(responses.get(0).getId()).isEqualTo(1L);
+        verify(postRepository).findByIdLessThanOrderByIdDesc(eq(2L), any(Pageable.class));
     }
 
     @Test
