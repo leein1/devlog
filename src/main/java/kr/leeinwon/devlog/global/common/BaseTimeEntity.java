@@ -1,4 +1,4 @@
-package kr.leeinwon.devlog.entity;
+package kr.leeinwon.devlog.global.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
