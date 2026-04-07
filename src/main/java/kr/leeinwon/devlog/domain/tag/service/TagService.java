@@ -1,9 +1,13 @@
 package kr.leeinwon.devlog.domain.tag.service;
 
 import jakarta.persistence.EntityManager;
+import kr.leeinwon.devlog.domain.post.entity.Post;
+import kr.leeinwon.devlog.domain.post.repository.PostRepository;
 import kr.leeinwon.devlog.domain.tag.dto.TagRequest;
 import kr.leeinwon.devlog.domain.tag.dto.TagResponse;
+import kr.leeinwon.devlog.domain.tag.entity.PostTag;
 import kr.leeinwon.devlog.domain.tag.entity.Tag;
+import kr.leeinwon.devlog.domain.tag.repository.PostTagRepository;
 import kr.leeinwon.devlog.domain.tag.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +22,8 @@ import java.util.stream.Collectors;
 public class TagService {
 
     private final TagRepository tagRepository;
-    private final EntityManager entityManager;
+    private final PostRepository postRepository;
+    private final PostTagRepository postTagRepository;
 
     @Transactional
     public TagResponse createTag(TagRequest tagRequest) {
@@ -54,5 +59,33 @@ public class TagService {
         tagRepository.deleteById(tagId);
     }
 
+    // 포스트 태그 저장 결과를 보여줄 일이 있는지 고민 필요
+    @Transactional
+    public void addTagToPost(Long postId, Long tagId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다"));
+        Tag tag = tagRepository.findById(tagId)
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 태그입니다"));
+
+        PostTag postTag = PostTag.builder()
+                .post(post)
+                .tag(tag)
+                .build();
+
+        postTagRepository.save(postTag);
+    }
+
+    public List<TagResponse> getTagsByPostId(Long postId) {
+
+        return postTagRepository.findByPostId(postId).stream()
+                .map(postTag -> new TagResponse(postTag.getTag()))
+                .collect(Collectors.toList());
+
+    }
+
+    @Transactional
+    public void deleteTagsByPostId(Long postId,Long tagId) {
+        postTagRepository.deleteByPostIdAndTagId(postId,tagId);
+    }
 
 }
