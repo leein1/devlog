@@ -52,11 +52,11 @@ public class TagService {
 
     @Transactional
     public void deleteTag(Long tagId) {
-        if(!tagRepository.existsById(tagId)) {
-            throw new IllegalArgumentException("태그가 존재하지 않습니다");
-        }
+        Tag tag = tagRepository.findById(tagId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 태그입니다")
+        );
 
-        tagRepository.deleteById(tagId);
+        tagRepository.delete(tag);
     }
 
     // 포스트 태그 저장 결과를 보여줄 일이 있는지 고민 필요
