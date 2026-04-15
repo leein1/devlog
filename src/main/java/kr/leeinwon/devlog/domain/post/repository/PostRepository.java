@@ -3,6 +3,7 @@ package kr.leeinwon.devlog.domain.post.repository;
 import kr.leeinwon.devlog.domain.post.entity.Post;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -13,4 +14,7 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 
     // cursor- id기준
     List<Post> findByIdLessThanOrderByIdDesc(Long id, Pageable pageable);
+
+    @Query("select distinct p from Post p left join fetch p.postTags pt left join fetch pt.tag")
+    List<Post> findAllWithTags();
 }
