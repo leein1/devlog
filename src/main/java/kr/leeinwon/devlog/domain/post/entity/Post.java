@@ -1,6 +1,7 @@
 package kr.leeinwon.devlog.domain.post.entity;
 
 import jakarta.persistence.*;
+import kr.leeinwon.devlog.domain.tag.entity.PostTag;
 import kr.leeinwon.devlog.global.common.BaseTimeEntity;
 import kr.leeinwon.devlog.domain.category.entity.Category;
 import kr.leeinwon.devlog.domain.user.entity.User;
@@ -8,6 +9,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -35,6 +39,9 @@ public class Post extends BaseTimeEntity {
 
     @Column(nullable = false, name = "view_count")
     private int viewCount;
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
+    private List<PostTag> postTags = new ArrayList<>();
 
     @Builder
     private Post(User user, Category category, String title, String content) {

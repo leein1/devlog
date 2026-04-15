@@ -157,7 +157,7 @@ public class PostServiceTest {
         Post post2 = createPost(2L, "제목2", "내용2", category);
         given(postRepository.findAll()).willReturn(List.of(post1,post2));
 
-        //whenn
+        //when
         List<PostResponse> postResponses = postService.getAllPost();
 
         //then
@@ -249,8 +249,6 @@ public class PostServiceTest {
         assertThatThrownBy(() -> postService.deletePost(1L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("게시글 존재하지 않아 삭제 불가");
-        //then
-
 
     }
 }

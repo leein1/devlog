@@ -31,10 +31,10 @@ public class PostController {
         return ResponseEntity.ok(postService.getPost(id));
     }
 
-    @GetMapping
-    public ResponseEntity<List<PostResponse>> getAllPosts(){
-        return ResponseEntity.ok(postService.getAllPost());
-    }
+//    @GetMapping
+//    public ResponseEntity<List<PostResponse>> getAllPosts(){
+//        return ResponseEntity.ok(postService.getAllPost());
+//    }
 
     @GetMapping
     public ResponseEntity<List<PostResponse>> getPosts(
