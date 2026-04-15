@@ -77,7 +77,10 @@ public class TagService {
 
     public List<TagResponse> getTagsByPostId(Long postId) {
 
-        return postTagRepository.findByPostId(postId).stream()
+//        return postTagRepository.findByPostId(postId).stream()
+//                .map(postTag -> new TagResponse(postTag.getTag()))
+//                .collect(Collectors.toList());
+        return postTagRepository.findByPostIdWithTag(postId).stream()
                 .map(postTag -> new TagResponse(postTag.getTag()))
                 .collect(Collectors.toList());
 
