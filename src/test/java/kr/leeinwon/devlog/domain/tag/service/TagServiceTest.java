@@ -196,7 +196,8 @@ public class TagServiceTest {
                 .post(Post.builder().build())
                 .tag(tag2)
                 .build();
-        given(postTagRepository.findByPostId(1L)).willReturn(List.of(postTag1, postTag2));
+//        given(postTagRepository.findByPostId(1L)).willReturn(List.of(postTag1, postTag2));
+        given(postTagRepository.findByPostIdWithTag(1L)).willReturn(List.of(postTag1, postTag2));
 
         List<TagResponse> tagResponses = tagService.getTagsByPostId(1L);
 
