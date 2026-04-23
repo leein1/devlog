@@ -1,27 +1,49 @@
-const recentPosts = [
-  {
-    id: 1,
-    category: 'Frontend',
-    date: 'Oct 24, 2023',
-    title: 'Implementing Framer Motion for Editorial Flow',
-    excerpt:
-      'A deep dive into creating natural, liquid transitions between layout states without breaking the user\'s mental model.',
-  },
-  {
-    id: 2,
-    category: 'React',
-    date: 'Oct 18, 2023',
-    title: 'Mastering Server Components in Next.js',
-    excerpt:
-      'Reducing client-side shipping by leveraging the power of streaming and selective hydration in the latest app directory patterns.',
-  },
-];
+// const recentPosts = [
+//   {
+//     id: 1,
+//     category: 'Frontend',
+//     date: 'Oct 24, 2023',
+//     title: 'Implementing Framer Motion for Editorial Flow',
+//     excerpt:
+//       'A deep dive into creating natural, liquid transitions between layout states without breaking the user\'s mental model.',
+//   },
+//   {
+//     id: 2,
+//     category: 'React',
+//     date: 'Oct 18, 2023',
+//     title: 'Mastering Server Components in Next.js',
+//     excerpt:
+//       'Reducing client-side shipping by leveraging the power of streaming and selective hydration in the latest app directory patterns.',
+//   },
+// ];
+
+import {useEffect, useState} from "react";
+import {fetchPostList, type PostResponse} from "../api/posts.ts";
 
 interface HomePageProps {
-  onReadPost: () => void;
+  onReadPost: (id:number) => void;
 }
 
 export default function HomePage({ onReadPost }: HomePageProps) {
+
+  const [posts,setPosts] = useState<PostResponse[]>([]);
+
+  useEffect(() => {
+    fetchPostList().then((res) => setPosts(res.data));
+  },[]);
+
+  const featuredPost = posts[0];
+  const recentPosts = posts.slice(1);
+
+  const formatDate = (dateStr: string) =>
+    new Date(dateStr).toLocaleDateString("en-US", {year: "numeric", month: "short", day: "numeric"});
+
+
+  const truncate = (text: string, max = 120) =>
+    text.length > max ? text.slice(0, max) + '...' : text;
+
+
+
   return (
     <main className="flex-1 min-w-0 pb-20 px-12">
       {/* Featured Post */}
@@ -47,14 +69,15 @@ export default function HomePage({ onReadPost }: HomePageProps) {
               Featured Post
             </span>
             <h1 className="text-5xl font-black text-[#1c1c1a] tracking-tighter leading-[1.1]">
-              The Art of Liquid UI in Modern Frameworks
+              {featuredPost ? featuredPost.title : '게시글을 불러오는 중...'}
             </h1>
             <p className="text-[#494946] text-lg leading-relaxed font-medium">
-              Explore how we utilize translucency and organic shapes to build immersive digital galleries that breathe.
+              {featuredPost && truncate(featuredPost.content)}
             </p>
             <div className="pt-2">
               <button
-                onClick={onReadPost}
+                // onClick={onReadPost}
+                onClick={() => featuredPost && onReadPost(featuredPost.id)}
                 className="bg-[#5c6e78] text-[#f4f6f7] px-8 py-4 rounded-full font-bold flex items-center gap-2 group/btn transition-all hover:bg-[#4a5a63] active:scale-95 shadow-[0_8px_24px_rgba(92,110,120,0.28)]"
               >
                 Read the Full Story
@@ -70,19 +93,19 @@ export default function HomePage({ onReadPost }: HomePageProps) {
       {/* Recent Posts */}
       <div className="space-y-1">
         {recentPosts.map((post) => (
-          <article key={post.id} className="group cursor-pointer" onClick={onReadPost}>
+          <article key={post.id} className="group cursor-pointer"  onClick={() => onReadPost(post.id)}>
             <div className="p-8 rounded-2xl transition-all hover:glass-card space-y-4">
               <div className="flex items-center gap-3">
                 <span className="text-xs font-bold text-[#5c6e78] tracking-widest uppercase">
-                  {post.category}
+                  {post.categoryName}
                 </span>
                 <span className="w-1 h-1 rounded-full bg-[#c8c8c5]" />
-                <time className="text-xs font-medium text-[#797976]">{post.date}</time>
+                <time className="text-xs font-medium text-[#797976]"> {formatDate(post.createdAt)} </time>
               </div>
               <h2 className="text-3xl font-extrabold tracking-tight text-[#1c1c1a] group-hover:text-[#5c6e78] transition-colors leading-tight">
                 {post.title}
               </h2>
-              <p className="text-[#494946] font-medium leading-relaxed">{post.excerpt}</p>
+              <p className="text-[#494946] font-medium leading-relaxed">{truncate(post.content)}</p>
               <div className="pt-1">
                 <span className="inline-flex items-center gap-1 text-sm font-bold text-[#5c6e78] opacity-0 group-hover:opacity-100 transition-opacity">
                   Read more
