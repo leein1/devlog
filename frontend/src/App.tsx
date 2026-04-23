@@ -10,6 +10,7 @@ type Page = 'home' | 'post';
 
 export default function App() {
   const [page, setPage] = useState<Page>('home');
+  const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
 
   return (
     <div className="bg-[#f6f6f3] text-[#1c1c1a] min-h-screen">
@@ -17,9 +18,11 @@ export default function App() {
       <div className="flex pt-24 gap-0 max-w-[1920px] mx-auto">
         <LeftSideBar />
         {page === 'home' ? (
-          <HomePage onReadPost={() => setPage('post')} />
+            <HomePage onReadPost={(id) => { setSelectedPostId(id);
+                setPage('post'); }} />
         ) : (
-          <PostDetailPage onBack={() => setPage('home')} />
+            <PostDetailPage postId={selectedPostId} onBack={() =>
+                setPage('home')} />
         )}
         {page === 'home' && <RightSideBar />}
       </div>
@@ -27,3 +30,5 @@ export default function App() {
     </div>
   );
 }
+
+
