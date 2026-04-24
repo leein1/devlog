@@ -19,8 +19,8 @@ export interface TagResponse {
     name: string;
 }
 
-export const fetchPost = (id: number) =>
-    apiClient.get<PostResponse>( `/posts/${id}`);
+export const fetchPost = (id: number, signal?:AbortSignal) =>
+    apiClient.get<PostResponse>( `/posts/${ id }`, { signal });
 
-export const fetchPostTags = (postId: number) =>
-    apiClient.get<TagResponse[]>(`/posts/${postId}/tags`);
+export const fetchPostTags = (postId: number, signal?:AbortSignal) =>
+    apiClient.get<TagResponse[]>(`/posts/${ postId }/tags`,{ signal });
