@@ -14,8 +14,10 @@ export default function PostDetailPage({ postId, onBack }: PostDetailPageProps) 
 
   useEffect(() => {
     if (!postId) return;
-    fetchPost(postId).then((res) => {setPost(res.data);})
-    fetchPostTags(postId).then((res) => {setTags(res.data);})
+    const controller = new AbortController();
+    fetchPost(postId, controller.signal).then((res) => {setPost(res.data);})
+    fetchPostTags(postId, controller.signal).then((res) => {setTags(res.data);})
+    return () =>  controller.abort();
   },[postId]);
 
   const formatDate = (dateStr: string) =>
