@@ -4,7 +4,9 @@
       "Bash(npm create:*)",
       "Bash(npm install:*)",
       "Bash(npm run:*)",
-      "Bash(mysql *)"
+      "Bash(mysql *)",
+      "Bash(xargs cat *)",
+      "Bash(git *)"
     ]
   }
 }
