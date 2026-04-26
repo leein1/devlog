@@ -11,14 +11,38 @@ export default function PostDetailPage({ postId, onBack }: PostDetailPageProps) 
 
   const [post, setPost] = useState<PostResponse | null >(null);
   const [tags, setTags] = useState<TagResponse[]>([]);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     if (!postId) return;
     const controller = new AbortController();
-    fetchPost(postId, controller.signal).then((res) => {setPost(res.data);})
-    fetchPostTags(postId, controller.signal).then((res) => {setTags(res.data);})
+
+    fetchPost(postId, controller.signal)
+        .then(
+            (res) => {setPost(res.data);}
+        )
+        .catch(
+            (err) => {if(err?.code !== 'ERR_CANCELED')setError(true);}
+        );
+
+    fetchPostTags(postId, controller.signal)
+        .then(
+            (res) => {setTags(res.data);}
+        )
+        .catch(
+            (err) => {if(err?.code !== 'ERR_CANCELED')setError(true);}
+        );
+
     return () =>  controller.abort();
   },[postId]);
+
+  if(error) return (
+      <main className="flex-1 min-w-0 pb-20 px-12 flex items-center justify-center">
+        <p className="text-[#797976] font-medium">
+          게시글을 불러올 수 없습니다
+        </p>
+      </main>
+  );
 
   const formatDate = (dateStr: string) =>
       new Date(dateStr).toLocaleDateString('en-US', { year: 'numeric',
