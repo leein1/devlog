@@ -27,9 +27,12 @@ interface HomePageProps {
 export default function HomePage({ onReadPost }: HomePageProps) {
 
   const [posts,setPosts] = useState<PostResponse[]>([]);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetchPostList().then((res) => setPosts(res.data));
+    fetchPostList()
+        .then((res) => setPosts(res.data))
+        .catch(() => setError(true));
   },[]);
 
   const featuredPost = posts[0];
@@ -42,9 +45,16 @@ export default function HomePage({ onReadPost }: HomePageProps) {
   const truncate = (text: string, max = 120) =>
     text.length > max ? text.slice(0, max) + '...' : text;
 
-
+  if(error) return (
+      <main className="flex-1 min-w-0 pb-20 px-12 flex items-center justify-center">
+        <p className="text-[#797976] font-medium">
+          게시글을 불러올 수 없습니다
+        </p>
+      </main>
+  );
 
   return (
+
     <main className="flex-1 min-w-0 pb-20 px-12">
       {/* Featured Post */}
       <section className="mb-12">
