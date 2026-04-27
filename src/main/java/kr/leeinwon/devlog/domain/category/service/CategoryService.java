@@ -46,6 +46,12 @@ public class CategoryService {
         return new CategoryResponse(category);
     }
 
+    public Category getCategoryEntity(Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new
+                        IllegalArgumentException("카테고리가 존재하지 않습니다"));
+    }
+
     @Transactional
     public void deleteCategory(Long id){
         Category category = categoryRepository.findById(id)
