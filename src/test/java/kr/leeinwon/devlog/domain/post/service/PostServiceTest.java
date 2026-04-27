@@ -177,7 +177,7 @@ public class PostServiceTest {
                 .willReturn(List.of(post2,post1));
 
         //when
-        List<PostResponse> postResponses = postService.getPosts(null, 10);
+        List<PostResponse> postResponses = postService.getAllPost(null, 10);
         log.info("List [0] : {}, List [1]: {}", postResponses.get(0).getId(), postResponses.get(1).getId());
         /*
         현재 오름차순으로 가져오는 문제 있음
@@ -200,7 +200,7 @@ public class PostServiceTest {
                 .willReturn(List.of(post1));
 
         // when
-        List<PostResponse> responses = postService.getPosts(2L, 10);
+        List<PostResponse> responses = postService.getAllPost(2L, 10);
 
         // then
         assertThat(responses).hasSize(1);
