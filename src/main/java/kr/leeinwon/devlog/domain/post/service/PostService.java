@@ -1,8 +1,6 @@
 package kr.leeinwon.devlog.domain.post.service;
 
-import jakarta.persistence.EntityManager;
 import kr.leeinwon.devlog.domain.category.entity.Category;
-import kr.leeinwon.devlog.domain.category.repository.CategoryRepository;
 import kr.leeinwon.devlog.domain.category.service.CategoryService;
 import kr.leeinwon.devlog.domain.post.dto.PostRequest;
 import kr.leeinwon.devlog.domain.post.dto.PostResponse;
@@ -56,17 +54,7 @@ public class PostService {
         return new PostResponse(post);
     }
 
-    /*
-    페이징 추가 필요
-     */
-    public List<PostResponse> getAllPost(){
-       return postRepository.findAll().stream()
-//                .map(PostResponse::new)
-               .map(Post -> new PostResponse(Post))
-                .collect(Collectors.toList());
-    }
-
-    public List<PostResponse> getPosts(Long cursor, int size){
+    public List<PostResponse> getAllPost(Long cursor, int size){
         Pageable pageable = PageRequest.of(0, size);
         List<Post> posts;
 
