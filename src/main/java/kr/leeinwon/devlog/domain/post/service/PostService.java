@@ -2,6 +2,8 @@ package kr.leeinwon.devlog.domain.post.service;
 
 import jakarta.persistence.EntityManager;
 import kr.leeinwon.devlog.domain.category.entity.Category;
+import kr.leeinwon.devlog.domain.category.repository.CategoryRepository;
+import kr.leeinwon.devlog.domain.category.service.CategoryService;
 import kr.leeinwon.devlog.domain.post.dto.PostRequest;
 import kr.leeinwon.devlog.domain.post.dto.PostResponse;
 import kr.leeinwon.devlog.domain.post.entity.Post;
@@ -21,7 +23,7 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final EntityManager entityManager;
+    private final CategoryService categoryService;
 
     private static final Long DEFAULT_CATEGORY_ID = 1L;
 
@@ -35,7 +37,7 @@ public class PostService {
                 ? request.getCategoryId()
                 : DEFAULT_CATEGORY_ID;
 
-        Category category = entityManager.getReference(Category.class, categoryId);
+        Category category = categoryService.getCategoryEntity(categoryId);
 
         Post post = Post.builder()
                 .title(request.getTitle())
@@ -89,7 +91,7 @@ public class PostService {
                 ? request.getCategoryId()
                 : DEFAULT_CATEGORY_ID;
 
-        Category category = entityManager.getReference(Category.class, categoryId);
+        Category category = categoryService.getCategoryEntity(categoryId);
 
         post.update(request.getTitle(), request.getContent(), category);
         return new PostResponse(post);
