@@ -54,7 +54,7 @@ public class PostService {
         return new PostResponse(post);
     }
 
-    public List<PostResponse> getAllPost(Long cursor, int size){
+    public List<PostResponse> getAllPosts(Long cursor, int size){
         Pageable pageable = PageRequest.of(0, size);
         List<Post> posts;
 
