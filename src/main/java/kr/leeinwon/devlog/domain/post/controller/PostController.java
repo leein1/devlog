@@ -3,10 +3,8 @@ package kr.leeinwon.devlog.domain.post.controller;
 import jakarta.validation.Valid;
 import kr.leeinwon.devlog.domain.post.dto.PostRequest;
 import kr.leeinwon.devlog.domain.post.dto.PostResponse;
-import kr.leeinwon.devlog.domain.post.repository.PostRepository;
 import kr.leeinwon.devlog.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +39,7 @@ public class PostController {
             @RequestParam(required = false) Long cursor
             ,@RequestParam(defaultValue = "10") int size){
 
-        return  ResponseEntity.ok(postService.getPosts(cursor, size));
+        return  ResponseEntity.ok(postService.getAllPosts(cursor, size));
     }
 
     @PutMapping("/{id}")

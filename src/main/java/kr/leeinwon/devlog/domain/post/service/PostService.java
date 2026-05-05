@@ -1,7 +1,7 @@
 package kr.leeinwon.devlog.domain.post.service;
 
-import jakarta.persistence.EntityManager;
 import kr.leeinwon.devlog.domain.category.entity.Category;
+import kr.leeinwon.devlog.domain.category.service.CategoryService;
 import kr.leeinwon.devlog.domain.post.dto.PostRequest;
 import kr.leeinwon.devlog.domain.post.dto.PostResponse;
 import kr.leeinwon.devlog.domain.post.entity.Post;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final EntityManager entityManager;
+    private final CategoryService categoryService;
 
     private static final Long DEFAULT_CATEGORY_ID = 1L;
 
@@ -35,7 +35,7 @@ public class PostService {
                 ? request.getCategoryId()
                 : DEFAULT_CATEGORY_ID;
 
-        Category category = entityManager.getReference(Category.class, categoryId);
+        Category category = categoryService.getCategoryEntity(categoryId);
 
         Post post = Post.builder()
                 .title(request.getTitle())
@@ -54,17 +54,7 @@ public class PostService {
         return new PostResponse(post);
     }
 
-    /*
-    페이징 추가 필요
-     */
-    public List<PostResponse> getAllPost(){
-       return postRepository.findAll().stream()
-//                .map(PostResponse::new)
-               .map(Post -> new PostResponse(Post))
-                .collect(Collectors.toList());
-    }
-
-    public List<PostResponse> getPosts(Long cursor, int size){
+    public List<PostResponse> getAllPosts(Long cursor, int size){
         Pageable pageable = PageRequest.of(0, size);
         List<Post> posts;
 
@@ -89,7 +79,7 @@ public class PostService {
                 ? request.getCategoryId()
                 : DEFAULT_CATEGORY_ID;
 
-        Category category = entityManager.getReference(Category.class, categoryId);
+        Category category = categoryService.getCategoryEntity(categoryId);
 
         post.update(request.getTitle(), request.getContent(), category);
         return new PostResponse(post);
