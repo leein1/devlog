@@ -1,11 +1,8 @@
 package kr.leeinwon.devlog.domain.post.service;
 
-import kr.leeinwon.devlog.domain.category.entity.Category;
-import kr.leeinwon.devlog.domain.category.service.CategoryService;
-import kr.leeinwon.devlog.domain.post.dto.PostRequest;
-import kr.leeinwon.devlog.domain.post.dto.PostResponse;
-import kr.leeinwon.devlog.domain.post.entity.Post;
-import kr.leeinwon.devlog.domain.post.repository.PostRepository;
+import kr.leeinwon.devlog.domain.category.Category;
+import kr.leeinwon.devlog.domain.category.CategoryService;
+import kr.leeinwon.devlog.domain.post.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
