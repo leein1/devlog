@@ -53,7 +53,9 @@ public class PostService {
         return new PostResponse(post);
     }
 
-    public List<PostResponse> getAllPosts(Long cursor, int size){
+    public List<PostResponse> getAllPosts(Long cursor, int size
+            ,Long categoryId, String tagName, String keyword){
+
         Pageable pageable = PageRequest.of(0, size);
         List<Post> posts;
 
@@ -63,7 +65,11 @@ public class PostService {
             posts = postRepository.findByIdLessThanOrderByIdDesc(cursor, pageable);
         }
 
-        return posts.stream()
+//        return posts.stream()
+//                .map(PostResponse::new)
+//                .collect(Collectors.toList());
+        return postRepository.searchPosts(cursor,size,categoryId,tagName,keyword)
+                .stream()
                 .map(PostResponse::new)
                 .collect(Collectors.toList());
     }
