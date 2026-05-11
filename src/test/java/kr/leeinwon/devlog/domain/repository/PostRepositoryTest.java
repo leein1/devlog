@@ -1,7 +1,7 @@
 package kr.leeinwon.devlog.domain.repository;
 
-import kr.leeinwon.devlog.domain.post.entity.Post;
-import kr.leeinwon.devlog.domain.post.repository.PostRepository;
+import kr.leeinwon.devlog.domain.post.Post;
+import kr.leeinwon.devlog.domain.post.PostRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;

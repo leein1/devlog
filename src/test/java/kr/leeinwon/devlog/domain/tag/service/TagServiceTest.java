@@ -1,19 +1,13 @@
 package kr.leeinwon.devlog.domain.tag.service;
 
-import kr.leeinwon.devlog.domain.post.entity.Post;
-import kr.leeinwon.devlog.domain.post.repository.PostRepository;
-import kr.leeinwon.devlog.domain.tag.dto.TagRequest;
-import kr.leeinwon.devlog.domain.tag.dto.TagResponse;
-import kr.leeinwon.devlog.domain.tag.entity.PostTag;
-import kr.leeinwon.devlog.domain.tag.entity.Tag;
-import kr.leeinwon.devlog.domain.tag.repository.PostTagRepository;
-import kr.leeinwon.devlog.domain.tag.repository.TagRepository;
+import kr.leeinwon.devlog.domain.post.Post;
+import kr.leeinwon.devlog.domain.post.PostRepository;
+import kr.leeinwon.devlog.domain.tag.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +27,8 @@ public class TagServiceTest {
 
     @Mock PostRepository postRepository;
 
-    @InjectMocks TagService tagService;
+    @InjectMocks
+    TagService tagService;
 
     private TagRequest createTagRequest(String name) {
         TagRequest tagRequest = new TagRequest();
