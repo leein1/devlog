@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface PostRepository extends JpaRepository<Post,Long> {
+public interface PostRepository extends JpaRepository<Post,Long>, PostRepositoryCustom{
 
     // 첫 페이지 - 최신순
     @EntityGraph(attributePaths = {"category"})
