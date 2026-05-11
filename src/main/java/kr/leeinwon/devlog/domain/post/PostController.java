@@ -33,10 +33,15 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<List<PostResponse>> getPosts(
-            @RequestParam(required = false) Long cursor
-            ,@RequestParam(defaultValue = "10") int size){
+            @RequestParam(required = false) Long cursor,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) String tagName,
+            @RequestParam(required = false) String keyword){
 
-        return  ResponseEntity.ok(postService.getAllPosts(cursor, size));
+        return  ResponseEntity.ok(postService.getAllPosts(cursor, size,
+                categoryId, tagName, keyword));
+
     }
 
     @PutMapping("/{id}")
