@@ -39,7 +39,7 @@ public class CommentService {
         return new CommentResponse(commentRepository.save(comment));
     }
 
-    public List<CommentResponse> getComments(Long postId){
+    public List<CommentResponse> getAllComment(Long postId){
 
         return commentRepository.findAllByPostIdWithUser(postId).stream()
                 .map(CommentResponse::new)
