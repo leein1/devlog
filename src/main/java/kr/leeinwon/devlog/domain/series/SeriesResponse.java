@@ -8,8 +8,8 @@ public class SeriesResponse {
     private final Long id;
     private final String name;
 
-    public SeriesResponse(Long id, String name) {
-        this.id = id;
-        this.name = name;
+    public SeriesResponse(Series series) {
+        this.id = series.getId();
+        this.name = series.getName();
     }
 }
