@@ -24,3 +24,15 @@ export const fetchPost = (id: number, signal?:AbortSignal) =>
 
 export const fetchPostTags = (postId: number, signal?:AbortSignal) =>
     apiClient.get<TagResponse[]>(`/posts/${ postId }/tags`,{ signal });
+
+export interface PostRequest {
+    title: string;
+    content: string;
+    categoryId?: number;
+}
+
+export const createPost = (data: PostRequest) =>
+    apiClient.post<PostResponse>('/posts', data);
+
+export const updatePost = (id: number, data: PostRequest) =>
+    apiClient.put<PostResponse>(`/posts/${id}`, data);

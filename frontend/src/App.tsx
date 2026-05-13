@@ -5,8 +5,9 @@ import RightSideBar from './components/layout/RightSideBar';
 import MobileBottomNav from './components/layout/MobileBottomNav';
 import HomePage from './pages/HomePage';
 import PostDetailPage from './pages/PostDetailPage';
+import WritePostPage from './pages/WritePostPage';
 
-type Page = 'home' | 'post';
+type Page = 'home' | 'post' | 'write';
 
 export default function App() {
   const [page, setPage] = useState<Page>('home');
@@ -14,15 +15,17 @@ export default function App() {
 
   return (
     <div className="bg-[#f6f6f3] text-[#1c1c1a] min-h-screen">
-      <TopNavBar />
+      <TopNavBar onWrite={() => setPage('write')} />
       <div className="flex pt-24 gap-0 max-w-[1920px] mx-auto">
         <LeftSideBar />
-        {page === 'home' ? (
-            <HomePage onReadPost={(id) => { setSelectedPostId(id);
-                setPage('post'); }} />
-        ) : (
-            <PostDetailPage postId={selectedPostId} onBack={() =>
-                setPage('home')} />
+        {page === 'home' && (
+            <HomePage onReadPost={(id) => { setSelectedPostId(id); setPage('post'); }} />
+        )}
+        {page === 'post' && (
+            <PostDetailPage postId={selectedPostId} onBack={() => setPage('home')} />
+        )}
+        {page === 'write' && (
+            <WritePostPage onBack={() => setPage('home')} />
         )}
         {page === 'home' && <RightSideBar />}
       </div>

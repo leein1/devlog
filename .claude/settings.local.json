@@ -6,7 +6,8 @@
       "Bash(npm run:*)",
       "Bash(mysql *)",
       "Bash(xargs cat *)",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(npx tsc *)"
     ]
   }
 }

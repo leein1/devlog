@@ -1,4 +1,6 @@
 import {useEffect, useState} from "react";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { fetchPost, fetchPostTags, type PostResponse, type TagResponse } from '../api/posts';
 
 
@@ -92,10 +94,10 @@ export default function PostDetailPage({ postId, onBack }: PostDetailPageProps) 
         <div className="h-px bg-gradient-to-r from-transparent via-[#c8c8c5]/60 to-transparent mb-10" />
 
         {/* 본문 콘텐츠 */}
-        <div className="prose-content text-[#1c1c1a]">
-          <p className="text-[#494946] leading-relaxed font-medium whitespace-pre-wrap">
-            {post?.content}
-          </p>
+        <div className="markdown-content">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {post?.content ?? ''}
+          </ReactMarkdown>
         </div>
 
         {/* 구분선 */}

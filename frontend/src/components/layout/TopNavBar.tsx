@@ -1,4 +1,8 @@
-export default function TopNavBar() {
+interface TopNavBarProps {
+  onWrite?: () => void;
+}
+
+export default function TopNavBar({ onWrite }: TopNavBarProps) {
   return (
     <nav className="fixed top-0 w-full z-50 glass-panel flex justify-between items-center px-8 py-4">
       <div className="flex items-center gap-12">
@@ -25,8 +29,12 @@ export default function TopNavBar() {
         </div>
       </div>
       <div className="flex items-center gap-4">
-        <button className="p-2 text-[#494946] hover:bg-[#1c1c1a]/5 rounded-full transition-all">
-          <span className="material-symbols-outlined">notifications</span>
+        <button
+          onClick={onWrite}
+          className="hidden md:inline-flex items-center gap-1.5 px-5 py-2 rounded-full font-bold text-sm text-[#5c6e78] border border-[#5c6e78]/25 hover:bg-[#5c6e78]/8 transition-all"
+        >
+          <span className="material-symbols-outlined text-[18px]">edit</span>
+          글쓰기
         </button>
         <button className="bg-[#5c6e78] text-[#f4f6f7] px-6 py-2 rounded-full font-bold transition-all hover:bg-[#4a5a63] active:scale-95 shadow-[0_4px_14px_rgba(92,110,120,0.28)]">
           Login
