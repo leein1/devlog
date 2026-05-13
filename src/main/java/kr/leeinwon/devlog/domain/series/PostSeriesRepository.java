@@ -1,5 +1,6 @@
 package kr.leeinwon.devlog.domain.series;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,4 +18,11 @@ public interface PostSeriesRepository extends JpaRepository<PostSeries, Long> {
     boolean existsBySeriesIdAndPostId(Long seriesId, Long postId);
 
     Optional<PostSeries> findBySeriesIdAndPostId(Long seriesId, Long postId);
+
+    @Query("select ps from PostSeries ps join fetch ps.post where ps.series.id = :seriesId and ps.orderNum < :orderNum order by ps.orderNum desc")
+    List<PostSeries> findPrevPost(@Param("seriesId") Long seriesId, @Param("orderNum") int orderNum, Pageable pageable);
+
+    @Query("select ps from PostSeries ps join fetch ps.post where ps.series.id = :seriesId and ps.orderNum > :orderNum order by ps.orderNum asc")
+    List<PostSeries> findNextPost(@Param("seriesId") Long seriesId, @Param("orderNum") int orderNum, Pageable pageable);
+
 }
