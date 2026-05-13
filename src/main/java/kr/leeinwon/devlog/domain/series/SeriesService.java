@@ -6,6 +6,7 @@ import kr.leeinwon.devlog.domain.user.User;
 import kr.leeinwon.devlog.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.boot.model.naming.IllegalIdentifierException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,14 +82,30 @@ public class SeriesService {
                 .collect(Collectors.toList());
     }
 
-@Transactional
-    public void removePostFromeSeries(Long seriesId, Long postId) {
+    @Transactional
+    public void removePostFromSeries(Long seriesId, Long postId) {
         PostSeries postSeries = postSeriesRepository.findBySeriesIdAndPostId(seriesId, postId).orElseThrow(
                 () -> new IllegalArgumentException("시리즈에 등록되지 않은 게시글이빈다")
         );
 
         postSeriesRepository.delete(postSeries);
-}
+    }
+
+    public SeriesNavigationResponse getNavigation(Long seriesId, Long postId){
+        PostSeries current = postSeriesRepository.findBySeriesIdAndPostId(seriesId, postId).orElseThrow(
+                () -> new IllegalArgumentException("시리즈에 등록되지 않은 게시글입니다")
+        );
+
+        List<PostSeries> prevList =
+                postSeriesRepository.findPrevPost(seriesId, current.getOrderNum(), PageRequest.of(0,1));
+        List<PostSeries> nextList =
+                postSeriesRepository.findNextPost(seriesId, current.getOrderNum(), PageRequest.of(0, 1));
+
+        PostSeriesResponse prev = prevList.isEmpty() ? null : new PostSeriesResponse(prevList.get(0));
+        PostSeriesResponse next = nextList.isEmpty() ? null : new PostSeriesResponse(nextList.get(0));
+
+        return new SeriesNavigationResponse(prev, next);
+    }
 
 
 }
