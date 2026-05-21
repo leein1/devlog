@@ -15,17 +15,21 @@ export default function App() {
 
   return (
     <div className="bg-[#f6f6f3] text-[#1c1c1a] min-h-screen">
-      <TopNavBar onWrite={() => setPage('write')} />
+      <TopNavBar onWrite={() => { setSelectedPostId(null); setPage('write'); }} />
       <div className="flex pt-24 gap-0 max-w-[1920px] mx-auto">
         <LeftSideBar />
         {page === 'home' && (
             <HomePage onReadPost={(id) => { setSelectedPostId(id); setPage('post'); }} />
         )}
         {page === 'post' && (
-            <PostDetailPage postId={selectedPostId} onBack={() => setPage('home')} />
+            <PostDetailPage
+                postId={selectedPostId}
+                onBack={() => setPage('home')}
+                onEdit={(id) => { setSelectedPostId(id); setPage('write'); }}
+            />
         )}
         {page === 'write' && (
-            <WritePostPage onBack={() => setPage('home')} />
+            <WritePostPage onBack={() => setPage('home')} editPostId={selectedPostId ?? undefined} />
         )}
         {page === 'home' && <RightSideBar />}
       </div>
