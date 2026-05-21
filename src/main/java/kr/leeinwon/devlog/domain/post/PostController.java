@@ -1,6 +1,9 @@
 package kr.leeinwon.devlog.domain.post;
 
 import jakarta.validation.Valid;
+import kr.leeinwon.devlog.domain.series.PostSeriesRepository;
+import kr.leeinwon.devlog.domain.series.SeriesResponse;
+import kr.leeinwon.devlog.domain.series.SeriesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,7 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final SeriesService seriesService;
 
     @PostMapping
     public ResponseEntity<PostResponse> createPost(@Valid @RequestBody PostRequest postRequest) {
@@ -53,6 +57,11 @@ public class PostController {
     public ResponseEntity<PostResponse> deletePost(@PathVariable Long id){
         postService.deletePost(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{postId}/series")
+    public ResponseEntity<List<SeriesResponse>> getSeries(@PathVariable Long postId){
+        return ResponseEntity.ok(seriesService.getSeriesByPostId(postId));
     }
 
 }
