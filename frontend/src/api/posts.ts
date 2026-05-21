@@ -11,6 +11,19 @@ export interface PostResponse {
     updatedAt: string;
 }
 
+export interface SeriesResponse{
+    id: number;
+    name: string;
+}
+
+export interface PostSeriesResponse{
+    postId: number;
+    title: string;
+    orderNum: number;
+
+}
+
+
 export const fetchPostList = (cursor?: number, size = 10) =>
      apiClient.get<PostResponse[]>( '/posts',{params: {cursor, size},});
 
@@ -31,8 +44,21 @@ export interface PostRequest {
     categoryId?: number;
 }
 
+
 export const createPost = (data: PostRequest) =>
     apiClient.post<PostResponse>('/posts', data);
 
 export const updatePost = (id: number, data: PostRequest) =>
     apiClient.put<PostResponse>(`/posts/${id}`, data);
+
+export const deletePost = (id: number) =>
+    apiClient.delete<PostResponse>(`/posts/${id}`);
+
+// 게시글이 속한 시리즈 목록
+export const fetchPostSeries = (postId: number, signal?:AbortSignal) =>
+    apiClient.get<SeriesResponse[]>(`/posts/${postId}/series`,{ signal });
+
+// 시리즈에 속한 게시글 목록
+export const fetchSeriesPosts = (seriesId: number, signal?: AbortSignal) =>
+    apiClient.get<PostSeriesResponse[]>(`/series/${seriesId}/posts`, { signal });
+
