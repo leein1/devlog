@@ -91,6 +91,12 @@ public class SeriesService {
         postSeriesRepository.delete(postSeries);
     }
 
+    public List<SeriesResponse> getSeriesByPostId(Long postId) {
+    return postSeriesRepository.findAllByPostIdWithSeries(postId).stream()
+            .map(ps -> new SeriesResponse(ps.getSeries()))
+            .collect(Collectors.toList());
+    }
+
     public SeriesNavigationResponse getNavigation(Long seriesId, Long postId){
         PostSeries current = postSeriesRepository.findBySeriesIdAndPostId(seriesId, postId).orElseThrow(
                 () -> new IllegalArgumentException("시리즈에 등록되지 않은 게시글입니다")
