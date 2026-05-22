@@ -23,6 +23,30 @@ export interface PostSeriesResponse{
 
 }
 
+export interface CommentResponse{
+    id: number;
+    content: string;
+    userId: number;
+    nickname: string;
+    createdAt: string;
+}
+
+export interface CommentRequest{
+    content: string;
+    userId: number;
+}
+
+
+export const fetchComments = (postId: number, signal?: AbortSignal) =>
+    apiClient.get<CommentResponse[]>(`/posts/${postId}/comments`, {signal });
+
+export const createComments=(postId:number, data: CommentRequest) =>
+    apiClient.post<CommentResponse[]>(`/posts/${postId}/comments`, data);
+
+export const deleteComment=(postId:number, commentid:number) =>
+    apiClient.delete(`/posts/${postId}/comments/${commentid}`);
+
+
 
 export const fetchPostList = (cursor?: number, size = 10) =>
      apiClient.get<PostResponse[]>( '/posts',{params: {cursor, size},});
