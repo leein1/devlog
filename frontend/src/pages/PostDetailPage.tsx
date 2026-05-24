@@ -9,7 +9,9 @@ import {
   type SeriesResponse,
   type TagResponse,
   type PostSeriesResponse,
-  fetchPostSeries, deletePost
+  fetchPostSeries, deletePost,
+  fetchComment, createComment, deleteComment,
+  type CommentResponse,
 } from '../api/posts';
 
 
@@ -19,39 +21,33 @@ const slugify = (text: string) =>
 interface PostDetailPageProps {
   postId: number | null;
   onBack: () => void;
-  onEdit: (id:number) => void;
+  onEdit: (id: number) => void;
 }
 
 export default function PostDetailPage({ postId, onBack, onEdit }: PostDetailPageProps) {
 
-  const [post, setPost] = useState<PostResponse | null >(null);
+  const [post, setPost] = useState<PostResponse | null>(null);
   const [tags, setTags] = useState<TagResponse[]>([]);
   const [error, setError] = useState(false);
   const [series, setSeries] = useState<SeriesResponse | null>(null);
   const [seriesPosts, setSeriesPosts] = useState<PostSeriesResponse[]>([]);
+  const [comments, setComments] = useState<CommentResponse[]>([]);
+  const [commentText, setCommentText] = useState('');
 
   useEffect(() => {
     if (!postId) return;
     const controller = new AbortController();
 
     fetchPost(postId, controller.signal)
-        .then(
-            (res) => {setPost(res.data);}
-        )
-        .catch(
-            (err) => {if(err?.code !== 'ERR_CANCELED')setError(true);}
-        );
+        .then((res) => { setPost(res.data); })
+        .catch((err) => { if (err?.code !== 'ERR_CANCELED') setError(true); });
 
     fetchPostTags(postId, controller.signal)
-        .then(
-            (res) => {setTags(res.data);}
-        )
-        .catch(
-            (err) => {if(err?.code !== 'ERR_CANCELED')setError(true);}
-        );
+        .then((res) => { setTags(res.data); })
+        .catch((err) => { if (err?.code !== 'ERR_CANCELED') setError(true); });
 
-    return () =>  controller.abort();
-  },[postId]);
+    return () => controller.abort();
+  }, [postId]);
 
   useEffect(() => {
     if (!postId) return;
@@ -62,35 +58,43 @@ export default function PostDetailPage({ postId, onBack, onEdit }: PostDetailPag
           if (res.data.length === 0) return;
           const firstSeries = res.data[0];
           setSeries(firstSeries);
-          return fetchSeriesPosts(firstSeries.id,
-              controller.signal);
+          return fetchSeriesPosts(firstSeries.id, controller.signal);
         })
         .then((res) => {
           if (res) setSeriesPosts(res.data);
         })
         .catch((err) => {
-          if (err?.code !== 'ERR_CANCELED')
-            setError(true);
+          if (err?.code !== 'ERR_CANCELED') setError(true);
         });
 
     return () => controller.abort();
   }, [postId]);
 
+  useEffect(() => {
+    if (!postId) return;
+    const controller = new AbortController();
 
-  if(error) return (
-      <main className="flex-1 min-w-0 pb-20 px-12 flex items-center justify-center">
-        <p className="text-[#797976] font-medium">
-          게시글을 불러올 수 없습니다
-        </p>
-      </main>
+    fetchComment(postId, controller.signal)
+        .then((res) => setComments(res.data))
+        .catch((err) => { if (err?.code !== 'ERR_CANCELED') setError(true); });
+
+    return () => controller.abort();
+  }, [postId]);
+
+
+  if (error) return (
+    <main className="flex-1 min-w-0 pb-20 px-12 flex items-center justify-center">
+      <p className="text-[#797976] font-medium">
+        게시글을 불러올 수 없습니다
+      </p>
+    </main>
   );
 
   const handleDelete = async () => {
-    if(!postId || !window.confirm("게시글을 삭제하시겠습니까?"))
-      return;
+    if (!postId || !window.confirm("게시글을 삭제하시겠습니까?")) return;
     await deletePost(postId);
     onBack();
-  }
+  };
 
   const headings = useMemo(() =>
     (post?.content ?? '').split('\n')
@@ -103,8 +107,7 @@ export default function PostDetailPage({ postId, onBack, onEdit }: PostDetailPag
   [post?.content]);
 
   const formatDate = (dateStr: string) =>
-      new Date(dateStr).toLocaleDateString('en-US', { year: 'numeric',
-        month: 'short', day: 'numeric' });
+    new Date(dateStr).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 
   return (
     <main className="flex-1 min-w-0 pb-20 px-12 flex gap-8">
@@ -120,27 +123,22 @@ export default function PostDetailPage({ postId, onBack, onEdit }: PostDetailPag
         {/*</button>*/}
         <div className="mb-8 flex items-center justify-between">
           <button
-              onClick={onBack}
-              className="inline-flex items-center gap-1.5 text-sm
-  font-bold text-[#5c6e78] hover:text-[#4a5a63]
-  transition-colors"
+            onClick={onBack}
+            className="inline-flex items-center gap-1.5 text-sm font-bold text-[#5c6e78] hover:text-[#4a5a63] transition-colors"
           >
-      <span className="material-symbols-outlined
-  text-[18px]">arrow_back</span>
+            <span className="material-symbols-outlined text-[18px]">arrow_back</span>
             목록으로
           </button>
           <div className="flex items-center gap-2">
             <button
-                onClick={() => postId && onEdit(postId)}
-                className="px-4 py-1.5 text-sm font-bold
-  text-[#5c6e78] hover:text-[#4a5a63] transition-colors"
+              onClick={() => postId && onEdit(postId)}
+              className="px-4 py-1.5 text-sm font-bold text-[#5c6e78] hover:text-[#4a5a63] transition-colors"
             >
               수정
             </button>
             <button
-                onClick={handleDelete}
-                className="px-4 py-1.5 text-sm font-bold
-  text-red-400 hover:text-red-500 transition-colors"
+              onClick={handleDelete}
+              className="px-4 py-1.5 text-sm font-bold text-red-400 hover:text-red-500 transition-colors"
             >
               삭제
             </button>
@@ -150,13 +148,11 @@ export default function PostDetailPage({ postId, onBack, onEdit }: PostDetailPag
         {/* 헤더 */}
         <header className="mb-10 space-y-5">
           <div className="flex items-center gap-3">
-
             <span className="text-xs font-bold text-[#5c6e78] tracking-widest uppercase">
               {post?.categoryName}
             </span>
             <span className="w-1 h-1 rounded-full bg-[#c8c8c5]" />
             <time className="text-xs font-medium text-[#797976]">{post ? formatDate(post.createdAt) : ''}</time>
-            <span className={"text-xs font-medium text-[#797976]" }/>
             <span className="w-1 h-1 rounded-full bg-[#c8c8c5]" />
             <span className="text-xs font-medium text-[#797976]">
               조회 {post?.viewCount ?? 0}
@@ -182,7 +178,6 @@ export default function PostDetailPage({ postId, onBack, onEdit }: PostDetailPag
 
         {/* 구분선 */}
         <div className="h-px bg-gradient-to-r from-transparent via-[#c8c8c5]/60 to-transparent mb-10" />
-
 
         {/* 본문 콘텐츠 */}
         <div className="markdown-content">
@@ -219,6 +214,68 @@ export default function PostDetailPage({ postId, onBack, onEdit }: PostDetailPag
             </p>
           </div>
         </nav>
+
+        {/* 구분선 */}
+        <div className="h-px bg-gradient-to-r from-transparent via-[#c8c8c5]/60 to-transparent my-12" />
+
+        {/* 댓글 섹션 */}
+        <section>
+          <h2 className="text-lg font-black text-[#1c1c1a] tracking-tight mb-6">
+            댓글 {comments.length}
+          </h2>
+
+          {/* 댓글 작성 폼 */}
+          <div className="glass-card rounded-2xl p-5 mb-8">
+            <textarea
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+              placeholder="댓글을 입력하세요"
+              rows={3}
+              className="w-full bg-transparent text-sm text-[#1c1c1a] placeholder-[#b0b0ad] resize-none outline-none"
+            />
+            <div className="flex justify-end mt-3">
+              <button
+                onClick={async () => {
+                  if (!postId || !commentText.trim()) return;
+                  const res = await createComment(postId, { content: commentText, userId: 1 });
+                  setComments((prev) => [...prev, res.data]);
+                  setCommentText('');
+                }}
+                className="px-5 py-2 rounded-full bg-[#5c6e78] text-white text-xs font-bold hover:bg-[#4a5a63] transition-colors"
+              >
+                등록
+              </button>
+            </div>
+          </div>
+
+          {/* 댓글 목록 */}
+          <ul className="space-y-4">
+            {comments.map((c) => (
+              <li key={c.id} className="glass-card rounded-2xl p-5">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-bold text-[#1c1c1a]">{c.nickname}</span>
+                  <div className="flex items-center gap-3">
+                    <time className="text-xs text-[#797976]">
+                      {new Date(c.createdAt).toLocaleDateString('ko-KR')}
+                    </time>
+                    <button
+                      onClick={async () => {
+                        if (!postId || !window.confirm('댓글을 삭제하시겠습니까?')) return;
+                        await deleteComment(postId, c.id);
+                        setComments((prev) => prev.filter((x) => x.id !== c.id));
+                      }}
+                      className="text-xs text-red-400 hover:text-red-500 font-bold transition-colors"
+                    >
+                      삭제
+                    </button>
+                  </div>
+                </div>
+                <p className="text-sm text-[#494946] leading-relaxed">{c.content}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
       </article>
 
       {/* 목차 사이드바 (데스크톱) */}
