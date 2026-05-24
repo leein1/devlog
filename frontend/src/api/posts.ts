@@ -37,11 +37,11 @@ export interface CommentRequest{
 }
 
 
-export const fetchComments = (postId: number, signal?: AbortSignal) =>
-    apiClient.get<CommentResponse[]>(`/posts/${postId}/comments`, {signal });
+export const fetchComment = (postId: number, signal?: AbortSignal) =>
+    apiClient.get<CommentResponse[]>(`/posts/${postId}/comments`, { signal });
 
-export const createComments=(postId:number, data: CommentRequest) =>
-    apiClient.post<CommentResponse[]>(`/posts/${postId}/comments`, data);
+export const createComment = (postId: number, data: CommentRequest) =>
+    apiClient.post<CommentResponse>(`/posts/${postId}/comments`, data);
 
 export const deleteComment=(postId:number, commentid:number) =>
     apiClient.delete(`/posts/${postId}/comments/${commentid}`);
