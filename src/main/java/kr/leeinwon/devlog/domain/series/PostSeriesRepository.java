@@ -29,4 +29,6 @@ public interface PostSeriesRepository extends JpaRepository<PostSeries, Long> {
     @Query("select ps from PostSeries ps join fetch ps.post where ps.series.id = :seriesId and ps.orderNum > :orderNum order by ps.orderNum asc")
     List<PostSeries> findNextPost(@Param("seriesId") Long seriesId, @Param("orderNum") int orderNum, Pageable pageable);
 
+   void deleteByPostId(Long postId);
+
 }
