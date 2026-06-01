@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,4 +20,8 @@ public class PostRequest {
     private String content;
 
     private Long categoryId;
+
+    private Long seriesId;
+
+    private List<Long> tagIdList;
 }
