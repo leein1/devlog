@@ -2,7 +2,14 @@ import {useEffect, useState} from 'react';
 import MDEditor from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/markdown-editor.css';
 import '@uiw/react-markdown-preview/markdown.css';
-import { createPost , updatePost, fetchPost } from '../api/posts';
+import {
+    createPost,
+    updatePost,
+    fetchPost,
+    type CategoryResponse,
+    type TagResponse,
+    type SeriesResponse, fetchPostTags, fetchPostSeries, fetchAllCategories, fetchAllTags, fetchAllSeries
+} from '../api/posts';
 
 interface WritePostPageProps {
     onBack: () => void;
@@ -14,13 +21,34 @@ export default function WritePostPage({ onBack,editPostId }: WritePostPageProps)
     const [content, setContent] = useState('');
     const [submitting, setSubmitting] = useState(false);
 
+    const [categoryId, setCategoryId] = useState<number | undefined>(undefined);
+    const [tagIdList, setTagIdList] = useState<number[]>([]);
+    const [seriesId, setSeriesId] = useState<number | undefined>(undefined);
+
+    const [categories, setCategories] = useState<CategoryResponse[]>([]);
+    const [tags, setTags] = useState<TagResponse[]>([]);
+    const [seriesList, setSeriesList] = useState<SeriesResponse[]>([]);
+
+    useEffect(() => {
+        fetchAllCategories().then(res => setCategories(res.data));
+        fetchAllTags().then(res => setTags(res.data));
+        fetchAllSeries().then(res => setSeriesList(res.data));
+    }, []);
+
     useEffect(() => {
         if (!editPostId) return;
-        fetchPost(editPostId)
-            .then((res) => {
+        fetchPost(editPostId).then((res) => {
                 setTitle(res.data.title);
                 setContent(res.data.content);
-            });
+                setCategoryId(res.data.categoryId);
+            })
+        fetchPostTags(editPostId).then((res) => {
+            setTagIdList(res.data.map(t => t.id));
+        })
+        fetchPostSeries(editPostId).then((res) => {
+            if (res.data.length > 0) setSeriesId(res.data[0].id);
+        })
+
     }, [editPostId]);
 
     const handleSubmit = async () => {
@@ -28,8 +56,10 @@ export default function WritePostPage({ onBack,editPostId }: WritePostPageProps)
         setSubmitting(true);
         try {
             editPostId
-                ? await updatePost(editPostId, { title, content })
-                : await createPost({ title, content });
+                ? await updatePost(editPostId, { title, content, categoryId,
+                    seriesId, tagIdList })
+                : await createPost({ title, content, categoryId, seriesId, tagIdList
+                });
             onBack();
         } catch {
             alert('게시글 작성에 실패했습니다.');
