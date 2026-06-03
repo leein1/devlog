@@ -65,7 +65,9 @@ export const fetchPostTags = (postId: number, signal?:AbortSignal) =>
 export interface PostRequest {
     title: string;
     content: string;
-    categoryId?: number;
+    categoryId?: number
+    seriesId?: number
+    tagIdList?: number[];
 }
 
 
@@ -85,4 +87,18 @@ export const fetchPostSeries = (postId: number, signal?:AbortSignal) =>
 // 시리즈에 속한 게시글 목록
 export const fetchSeriesPosts = (seriesId: number, signal?: AbortSignal) =>
     apiClient.get<PostSeriesResponse[]>(`/series/${seriesId}/posts`, { signal });
+
+export interface CategoryResponse {
+    id: number;
+    name: string;
+}
+
+export const fetchAllCategories = () =>
+    apiClient.get<CategoryResponse[]>('/categories');
+
+export const fetchAllTags = () =>
+    apiClient.get<TagResponse[]>('/tags');
+
+export const fetchAllSeries = () =>
+    apiClient.get<SeriesResponse[]>('/series');
 
