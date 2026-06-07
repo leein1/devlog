@@ -2,9 +2,15 @@ package kr.leeinwon.devlog.domain.post;
 
 import kr.leeinwon.devlog.domain.category.Category;
 import kr.leeinwon.devlog.domain.category.CategoryService;
+import kr.leeinwon.devlog.domain.series.PostSeries;
+import kr.leeinwon.devlog.domain.series.PostSeriesRepository;
+import kr.leeinwon.devlog.domain.series.Series;
+import kr.leeinwon.devlog.domain.series.SeriesRepository;
+import kr.leeinwon.devlog.domain.tag.PostTag;
+import kr.leeinwon.devlog.domain.tag.PostTagRepository;
+import kr.leeinwon.devlog.domain.tag.Tag;
+import kr.leeinwon.devlog.domain.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +24,12 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CategoryService categoryService;
+
+    // 작성 및 수정시 카테고리, 태그, 시리즈 추가 관련
+    private final TagRepository tagRepository;
+    private final PostTagRepository postTagRepository;
+    private final PostSeriesRepository postSeriesRepository;
+    private final SeriesRepository seriesRepository;
 
     private static final Long DEFAULT_CATEGORY_ID = 1L;
 
@@ -40,6 +52,37 @@ public class PostService {
                 .build();
 
         Post savedPost = postRepository.save(post);
+
+        // 태그
+        if(request.getTagIdList() != null &&   !request.getTagIdList().isEmpty()){
+            for(Long tagId : request.getTagIdList()){
+                Tag tag = tagRepository.findById(tagId).orElseThrow(
+                        () -> new IllegalArgumentException("존재하지 않는 태그입니다")
+                );
+                postTagRepository.save(
+                        PostTag.builder()
+                                .post(savedPost)
+                                .tag(tag)
+                                .build()
+                );
+            }
+        }
+        // 시리즈
+        if(request.getSeriesId() != null){
+            Series series = seriesRepository.findById(request.getSeriesId()).orElseThrow(
+                    () -> new IllegalArgumentException("존재하지 않는 시리즈 입니다")
+            );
+            int orderNum = postSeriesRepository.countBySeriesId(request.getSeriesId())+1;
+            postSeriesRepository.save(
+                    PostSeries.builder()
+                            .post(savedPost)
+                            .series(series)
+                            .orderNum(orderNum)
+                            .build()
+            );
+
+        }
+
         return new PostResponse(savedPost);
     }
 
@@ -56,18 +99,6 @@ public class PostService {
     public List<PostResponse> getAllPosts(Long cursor, int size
             ,Long categoryId, String tagName, String keyword){
 
-        Pageable pageable = PageRequest.of(0, size);
-        List<Post> posts;
-
-        if(cursor == null){
-            posts = postRepository.findAllByOrderByIdDesc(pageable);
-        } else {
-            posts = postRepository.findByIdLessThanOrderByIdDesc(cursor, pageable);
-        }
-
-//        return posts.stream()
-//                .map(PostResponse::new)
-//                .collect(Collectors.toList());
         return postRepository.searchPosts(cursor,size,categoryId,tagName,keyword)
                 .stream()
                 .map(PostResponse::new)
@@ -85,8 +116,37 @@ public class PostService {
                 : DEFAULT_CATEGORY_ID;
 
         Category category = categoryService.getCategoryEntity(categoryId);
-
         post.update(request.getTitle(), request.getContent(), category);
+
+        //태그 전체 교체
+        postTagRepository.deleteByPostId(id);
+        if(request.getTagIdList() != null &&  !request.getTagIdList().isEmpty()){
+            for(Long tagId : request.getTagIdList()){
+                Tag tag = tagRepository.findById(tagId).orElseThrow(
+                        () -> new IllegalArgumentException("존재하지 않는 태그입니다")
+                );
+                postTagRepository.save(PostTag.builder()
+                        .post(post)
+                        .tag(tag)
+                        .build()
+                );
+            }
+        }
+        //시리즈 전체 교체
+        postSeriesRepository.deleteByPostId(id);
+        if(request.getSeriesId() != null) {
+            Series series = seriesRepository.findById(request.getSeriesId()).orElseThrow(
+                    () -> new IllegalArgumentException("존재하지 않는 시리즈 입니다" )
+            );
+            int orderNum = postSeriesRepository.countBySeriesId(request.getSeriesId()) + 1;
+            postSeriesRepository.save(
+                    PostSeries.builder()
+                            .post(post)
+                            .series(series)
+                            .orderNum(orderNum)
+                            .build()
+            );
+        }
         return new PostResponse(post);
     }
 
