@@ -88,6 +88,75 @@ export default function WritePostPage({ onBack,editPostId }: WritePostPageProps)
 
             <div className="h-px bg-gradient-to-r from-transparent via-[#c8c8c5]/60 to-transparent mb-6" />
 
+            {/* 카테고리 / 태그 / 시리즈 선택 */}
+            <div className="flex flex-col gap-4 mb-6 p-5 glass-card rounded-3xl">
+                <div className="flex items-center gap-3">
+                    <span className="text-sm font-bold text-[#5c6e78] w-16 shrink-0">카테고리</span>
+                    <select
+                        value={categoryId ?? ''}
+                        onChange={(e) => setCategoryId(e.target.value ? Number(e.target.value) : undefined)}
+                        className="text-sm text-[#1c1c1a] bg-transparent border border-[#c8c8c5] rounded-full px-3 py-1 outline-none focus:border-[#5c6e78]"
+                    >
+                        <option value="">선택 안함</option>
+                        {categories.map((c) => (
+                            <option key={c.id} value={c.id}>{c.name}</option>
+                        ))}
+                    </select>
+                </div>
+
+                {/* 태그 — 클릭 토글 */}
+                <div className="flex items-start gap-3">
+                    <span className="text-sm font-bold text-[#5c6e78] w-16 shrink-0 pt-1">태그</span>
+                    <div className="flex flex-wrap gap-2">
+                        {tags.length === 0 ? (
+                            <span className= "text-xs text-[#a8a8a5]">등록된 태그가 없습니다</span>
+                            ):(
+
+                            tags.map((tag) => {
+                                    const selected = tagIdList.includes(tag.id);
+                                    return (
+                                        <button
+                                            key={tag.id}
+                                            type="button"
+                                            onClick={() =>
+                                                setTagIdList((prev) =>
+                                                    selected ? prev.filter((id) => id !== tag.id) : [...prev, tag.id]
+                                                )
+                                            }
+                                            className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${
+                                                selected
+                                                    ? 'bg-[#5c6e78] text-white'
+                                                    : 'bg-[#e8e8e5] text-[#5c6e78] hover:bg-[#d8d8d5]'
+                                            }`}
+                                        >
+                                            {tag.name}
+                                        </button>
+                                    );
+                            })
+                        )}
+                    </div>
+                </div>
+
+                {/* 시리즈 */}
+                <div className="flex items-center gap-3">
+                    <span className="text-sm font-bold text-[#5c6e78] w-16 shrink-0">시리즈</span>
+                    <select
+                        value={seriesId ?? ''}
+                        onChange={(e) => setSeriesId(e.target.value ? Number(e.target.value) : undefined)}
+                        className="text-sm text-[#1c1c1a] bg-transparent border border-[#c8c8c5] rounded-full px-3 py-1 outline-none focus:border-[#5c6e78]"
+                    >
+                        <option value="">선택 안함</option>
+                        {seriesList.map((s) => (
+                            <option key={s.id} value={s.id}>{s.name}</option>
+                        ))}
+                    </select>
+                </div>
+
+            </div>
+
+
+
+
             <div data-color-mode="light">
                 <MDEditor
                     value={content}
