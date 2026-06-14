@@ -19,13 +19,15 @@
 
 import {useEffect, useState} from "react";
 import {fetchPostList, type PostResponse} from "../api/posts.ts";
+import { useNavigate } from 'react-router-dom';
 
-interface HomePageProps {
-  onReadPost: (id:number) => void;
-}
+// interface HomePageProps {
+//   onReadPost: (id:number) => void;
+// }
 
-export default function HomePage({ onReadPost }: HomePageProps) {
+export default function HomePage( ) {
 
+  const navigate = useNavigate();
   const [posts,setPosts] = useState<PostResponse[]>([]);
   const [error, setError] = useState(false);
 
@@ -87,7 +89,7 @@ export default function HomePage({ onReadPost }: HomePageProps) {
             <div className="pt-2">
               <button
                 // onClick={onReadPost}
-                onClick={() => featuredPost && onReadPost(featuredPost.id)}
+                onClick={() => featuredPost && navigate(  `/post/${featuredPost.id}`)}
                 className="bg-[#5c6e78] text-[#f4f6f7] px-8 py-4 rounded-full font-bold flex items-center gap-2 group/btn transition-all hover:bg-[#4a5a63] active:scale-95 shadow-[0_8px_24px_rgba(92,110,120,0.28)]"
               >
                 Read the Full Story
@@ -103,7 +105,7 @@ export default function HomePage({ onReadPost }: HomePageProps) {
       {/* Recent Posts */}
       <div className="space-y-1">
         {recentPosts.map((post) => (
-          <article key={post.id} className="group cursor-pointer"  onClick={() => onReadPost(post.id)}>
+          <article key={post.id} className="group cursor-pointer"  onClick={() => navigate(`/post/${post.id}`)}>
             <div className="p-8 rounded-2xl transition-all hover:glass-card space-y-4">
               <div className="flex items-center gap-3">
                 <span className="text-xs font-bold text-[#5c6e78] tracking-widest uppercase">

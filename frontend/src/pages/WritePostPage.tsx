@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import MDEditor from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/markdown-editor.css';
 import '@uiw/react-markdown-preview/markdown.css';
@@ -11,12 +12,10 @@ import {
     type SeriesResponse, fetchPostTags, fetchPostSeries, fetchAllCategories, fetchAllTags, fetchAllSeries
 } from '../api/posts';
 
-interface WritePostPageProps {
-    onBack: () => void;
-    editPostId?:number;
-}
-
-export default function WritePostPage({ onBack,editPostId }: WritePostPageProps) {
+export default function WritePostPage() {
+    const { id } = useParams<{ id: string }>();
+    const editPostId = id ? Number(id) : undefined;
+    const navigate = useNavigate();
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [submitting, setSubmitting] = useState(false);
@@ -55,12 +54,13 @@ export default function WritePostPage({ onBack,editPostId }: WritePostPageProps)
         if (!title.trim() || !content.trim()) return;
         setSubmitting(true);
         try {
-            editPostId
-                ? await updatePost(editPostId, { title, content, categoryId,
-                    seriesId, tagIdList })
-                : await createPost({ title, content, categoryId, seriesId, tagIdList
-                });
-            onBack();
+            if (editPostId) {
+                await updatePost(editPostId, { title, content, categoryId, seriesId, tagIdList });
+                navigate(`/post/${editPostId}`);
+            } else {
+                const res = await createPost({ title, content, categoryId, seriesId, tagIdList });
+                navigate(`/post/${res.data.id}`);
+            }
         } catch {
             alert('게시글 작성에 실패했습니다.');
         } finally {
@@ -71,7 +71,7 @@ export default function WritePostPage({ onBack,editPostId }: WritePostPageProps)
     return (
         <main className="flex-1 min-w-0 pb-20 px-12">
             <button
-                onClick={onBack}
+                onClick={() => navigate('/')}
                 className="mb-8 inline-flex items-center gap-1.5 text-sm font-bold text-[#5c6e78] hover:text-[#4a5a63] transition-colors"
             >
                 <span className="material-symbols-outlined text-[18px]">arrow_back</span>
