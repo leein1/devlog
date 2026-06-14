@@ -13,19 +13,23 @@ import {
   fetchComment, createComment, deleteComment,
   type CommentResponse,
 } from '../api/posts';
+import { useParams, useNavigate } from 'react-router-dom';
 
 
 const slugify = (text: string) =>
   text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
 
-interface PostDetailPageProps {
-  postId: number | null;
-  onBack: () => void;
-  onEdit: (id: number) => void;
-}
+// interface PostDetailPageProps {
+//   postId: number | null;
+//   onBack: () => void;
+//   onEdit: (id: number) => void;
+// }
 
-export default function PostDetailPage({ postId, onBack, onEdit }: PostDetailPageProps) {
+export default function PostDetailPage( ) {
 
+  const { id } = useParams<{ id: string }>();
+  const postId = Number(id);
+  const navigate = useNavigate();
   const [post, setPost] = useState<PostResponse | null>(null);
   const [tags, setTags] = useState<TagResponse[]>([]);
   const [error, setError] = useState(false);
@@ -93,7 +97,7 @@ export default function PostDetailPage({ postId, onBack, onEdit }: PostDetailPag
   const handleDelete = async () => {
     if (!postId || !window.confirm("게시글을 삭제하시겠습니까?")) return;
     await deletePost(postId);
-    onBack();
+    navigate('/')
   };
 
   const headings = useMemo(() =>
@@ -123,7 +127,7 @@ export default function PostDetailPage({ postId, onBack, onEdit }: PostDetailPag
         {/*</button>*/}
         <div className="mb-8 flex items-center justify-between">
           <button
-            onClick={onBack}
+            onClick={() => navigate('/')}
             className="inline-flex items-center gap-1.5 text-sm font-bold text-[#5c6e78] hover:text-[#4a5a63] transition-colors"
           >
             <span className="material-symbols-outlined text-[18px]">arrow_back</span>
@@ -131,7 +135,7 @@ export default function PostDetailPage({ postId, onBack, onEdit }: PostDetailPag
           </button>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => postId && onEdit(postId)}
+              onClick={() => postId && navigate(`/write/${id}`)}
               className="px-4 py-1.5 text-sm font-bold text-[#5c6e78] hover:text-[#4a5a63] transition-colors"
             >
               수정
