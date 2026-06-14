@@ -5,4 +5,3 @@ export default function PortfolioPage() {
     </main>
   );
 }
-2

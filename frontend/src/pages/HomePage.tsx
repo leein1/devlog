@@ -17,8 +17,8 @@
 //   },
 // ];
 
-import {useEffect, useState} from "react";
-import {fetchPostList, type PostResponse} from "../api/posts.ts";
+import { useEffect, useState } from 'react';
+import { fetchPostList, type PostResponse } from '../api/posts.ts';
 import { useNavigate } from 'react-router-dom';
 
 // interface HomePageProps {
@@ -28,7 +28,7 @@ import { useNavigate } from 'react-router-dom';
 export default function HomePage( ) {
 
   const navigate = useNavigate();
-  const [posts,setPosts] = useState<PostResponse[]>([]);
+  const [posts, setPosts] = useState<PostResponse[]>([]);
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -41,13 +41,13 @@ export default function HomePage( ) {
   const recentPosts = posts.slice(1);
 
   const formatDate = (dateStr: string) =>
-    new Date(dateStr).toLocaleDateString("en-US", {year: "numeric", month: "short", day: "numeric"});
+    new Date(dateStr).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 
 
   const truncate = (text: string, max = 120) =>
     text.length > max ? text.slice(0, max) + '...' : text;
 
-  if(error) return (
+  if (error) return (
       <main className="flex-1 min-w-0 pb-20 px-12 flex items-center justify-center">
         <p className="text-outline font-medium">
           게시글을 불러올 수 없습니다
@@ -105,7 +105,7 @@ export default function HomePage( ) {
       {/* Recent Posts */}
       <div className="space-y-1">
         {recentPosts.map((post) => (
-          <article key={post.id} className="group cursor-pointer"  onClick={() => navigate(`/post/${post.id}`)}>
+          <article key={post.id} className="group cursor-pointer" onClick={() => navigate(`/post/${post.id}`)}>
             <div className="p-8 rounded-2xl transition-all hover:glass-card space-y-4">
               <div className="flex items-center gap-3">
                 <span className="text-xs font-bold text-primary tracking-widest uppercase">

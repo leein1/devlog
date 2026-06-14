@@ -5,7 +5,7 @@ import MobileBottomNav from './components/layout/MobileBottomNav';
 import HomePage from './pages/HomePage';
 import PostDetailPage from './pages/PostDetailPage';
 import WritePostPage from './pages/WritePostPage';
-import {Route, Routes} from "react-router-dom";
+import { Route, Routes } from 'react-router-dom';
 
 // type Page = 'home' | 'post' | 'write';
 
@@ -35,21 +35,19 @@ export default function App() {
       {/*</div>*/}
       {/*<MobileBottomNav />*/}
 
-        <TopNavBar />
-        <div className="flex pt-24 gap-0 max-w-[1920px] min-h-screen]">
-            <LeftSideBar />
-            <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/post/:id" element={<PostDetailPage />}/>
-                <Route path="/write" element={<WritePostPage/>}/>
-                <Route path="/write/:id" element={<WritePostPage />}/>
-                {/*<Route path="/portfolio" element={<PortFolioPage/>}/>*/}
-            </Routes>
-            {location.pathname === '/' && <RightSideBar />}
-        </div>
-        <MobileBottomNav />
+      <TopNavBar />
+      <div className="flex pt-24 gap-0 max-w-[1920px] min-h-screen]">
+        <LeftSideBar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/post/:id" element={<PostDetailPage />} />
+          <Route path="/write" element={<WritePostPage />} />
+          <Route path="/write/:id" element={<WritePostPage />} />
+          {/*<Route path="/portfolio" element={<PortFolioPage/>}/>*/}
+        </Routes>
+        {location.pathname === '/' && <RightSideBar />}
+      </div>
+      <MobileBottomNav />
     </div>
   );
 }
-
-

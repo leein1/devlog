@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useState} from "react";
+import { useEffect, useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import {
@@ -9,8 +9,11 @@ import {
   type SeriesResponse,
   type TagResponse,
   type PostSeriesResponse,
-  fetchPostSeries, deletePost,
-  fetchComment, createComment, deleteComment,
+  fetchPostSeries,
+  deletePost,
+  fetchComment,
+  createComment,
+  deleteComment,
   type CommentResponse,
 } from '../api/posts';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -85,7 +88,6 @@ export default function PostDetailPage( ) {
     return () => controller.abort();
   }, [postId]);
 
-
   if (error) return (
     <main className="flex-1 min-w-0 pb-20 px-12 flex items-center justify-center">
       <p className="text-outline font-medium">
@@ -97,7 +99,7 @@ export default function PostDetailPage( ) {
   const handleDelete = async () => {
     if (!postId || !window.confirm("게시글을 삭제하시겠습니까?")) return;
     await deletePost(postId);
-    navigate('/')
+    navigate('/');
   };
 
   const headings = useMemo(() =>
