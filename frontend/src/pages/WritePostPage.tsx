@@ -72,7 +72,7 @@ export default function WritePostPage() {
         <main className="flex-1 min-w-0 pb-20 px-12">
             <button
                 onClick={() => navigate('/')}
-                className="mb-8 inline-flex items-center gap-1.5 text-sm font-bold text-[#5c6e78] hover:text-[#4a5a63] transition-colors"
+                className="mb-8 inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:text-primary-container transition-colors"
             >
                 <span className="material-symbols-outlined text-[18px]">arrow_back</span>
                 목록으로
@@ -83,19 +83,19 @@ export default function WritePostPage() {
                 placeholder="제목을 입력하세요"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full text-4xl font-black text-[#1c1c1a] tracking-tighter bg-transparent border-none outline-none placeholder:text-[#c8c8c5] mb-6"
+                className="w-full text-4xl font-black text-on-surface tracking-tighter bg-transparent border-none outline-none placeholder:text-outline-variant mb-6"
             />
 
-            <div className="h-px bg-gradient-to-r from-transparent via-[#c8c8c5]/60 to-transparent mb-6" />
+            <div className="h-px bg-gradient-to-r from-transparent via-outline-variant/60 to-transparent mb-6" />
 
             {/* 카테고리 / 태그 / 시리즈 선택 */}
             <div className="flex flex-col gap-4 mb-6 p-5 glass-card rounded-3xl">
                 <div className="flex items-center gap-3">
-                    <span className="text-sm font-bold text-[#5c6e78] w-16 shrink-0">카테고리</span>
+                    <span className="text-sm font-bold text-primary w-16 shrink-0">카테고리</span>
                     <select
                         value={categoryId ?? ''}
                         onChange={(e) => setCategoryId(e.target.value ? Number(e.target.value) : undefined)}
-                        className="text-sm text-[#1c1c1a] bg-transparent border border-[#c8c8c5] rounded-full px-3 py-1 outline-none focus:border-[#5c6e78]"
+                        className="text-sm text-on-surface bg-transparent border border-outline-variant rounded-full px-3 py-1 outline-none focus:border-primary"
                     >
                         <option value="">선택 안함</option>
                         {categories.map((c) => (
@@ -106,10 +106,10 @@ export default function WritePostPage() {
 
                 {/* 태그 — 클릭 토글 */}
                 <div className="flex items-start gap-3">
-                    <span className="text-sm font-bold text-[#5c6e78] w-16 shrink-0 pt-1">태그</span>
+                    <span className="text-sm font-bold text-primary w-16 shrink-0 pt-1">태그</span>
                     <div className="flex flex-wrap gap-2">
                         {tags.length === 0 ? (
-                            <span className= "text-xs text-[#a8a8a5]">등록된 태그가 없습니다</span>
+                            <span className= "text-xs text-outline">등록된 태그가 없습니다</span>
                             ):(
 
                             tags.map((tag) => {
@@ -125,8 +125,8 @@ export default function WritePostPage() {
                                             }
                                             className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${
                                                 selected
-                                                    ? 'bg-[#5c6e78] text-white'
-                                                    : 'bg-[#e8e8e5] text-[#5c6e78] hover:bg-[#d8d8d5]'
+                                                    ? 'bg-primary text-on-primary'
+                                                    : 'bg-surface-container-highest text-primary hover:bg-surface-container-high'
                                             }`}
                                         >
                                             {tag.name}
@@ -139,11 +139,11 @@ export default function WritePostPage() {
 
                 {/* 시리즈 */}
                 <div className="flex items-center gap-3">
-                    <span className="text-sm font-bold text-[#5c6e78] w-16 shrink-0">시리즈</span>
+                    <span className="text-sm font-bold text-primary w-16 shrink-0">시리즈</span>
                     <select
                         value={seriesId ?? ''}
                         onChange={(e) => setSeriesId(e.target.value ? Number(e.target.value) : undefined)}
-                        className="text-sm text-[#1c1c1a] bg-transparent border border-[#c8c8c5] rounded-full px-3 py-1 outline-none focus:border-[#5c6e78]"
+                        className="text-sm text-on-surface bg-transparent border border-outline-variant rounded-full px-3 py-1 outline-none focus:border-primary"
                     >
                         <option value="">선택 안함</option>
                         {seriesList.map((s) => (
@@ -170,7 +170,7 @@ export default function WritePostPage() {
                 <button
                     onClick={handleSubmit}
                     disabled={submitting || !title.trim() || !content.trim()}
-                    className="px-8 py-3 bg-[#5c6e78] text-white font-bold rounded-full hover:bg-[#4a5a63] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-8 py-3 bg-primary text-on-primary font-bold rounded-full hover:bg-primary-container transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     {submitting ? '저장 중...' : editPostId ? '수정하기' : '게시하기'}
                 </button>

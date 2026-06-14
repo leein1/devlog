@@ -3,6 +3,8 @@
 
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* Primary — 틸 (포인트 컬러로만 사용) */
   --color-primary: #5c6e78;
@@ -69,15 +71,34 @@
   --font-label: 'Manrope', sans-serif;
 }
 
+.dark {
+  --color-primary: #8eaab6;
+  --color-primary-container: #6a8a96;
+  --color-on-primary: #0f1f24;
+  --color-surface: #1a1a18;
+  --color-surface-dim: #141412;
+  --color-surface-bright: #222220;
+  --color-surface-container-lowest: #111110;
+  --color-surface-container-low: #1e1e1c;
+  --color-surface-container: #252523;
+  --color-surface-container-high: #2a2a28;
+  --color-surface-container-highest: #2f2f2d;
+  --color-on-surface: #e8e8e5;
+  --color-on-surface-variant: #b0b0ad;
+  --color-background: #1a1a18;
+  --color-on-background: #e8e8e5;
+  --color-outline: #929290;
+  --color-outline-variant: #3a3a38;
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
   font-family: 'Manrope', sans-serif;
-  /* 배경: 거의 흰색이지만 순수 흰색 아닌 아주 미세한 웜 오프화이트 */
-  background-color: #f6f6f3;
-  color: #1c1c1a;
+  background-color: var(--color-background);
+  color: var(--color-on-background);
   margin: 0;
 }
 
@@ -107,6 +128,24 @@ body {
   box-shadow:
     0 2px 16px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 254, 0.85);
+}
+
+.dark .glass-panel {
+  background: rgba(28, 28, 26, 0.85);
+  border: 1px solid rgba(58, 58, 56, 0.6);
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.dark .glass-card {
+  background: rgba(35, 35, 33, 0.75);
+  border: 1px solid rgba(58, 58, 56, 0.5);
+  box-shadow:
+    0 2px 16px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 /* 피처드 배너용 */
@@ -148,6 +187,20 @@ body {
   border: 1px solid #c8c8c5; padding: 0.5rem 0.75rem; text-align: left;
 }
 .markdown-content th { background: rgba(92, 110, 120, 0.08); font-weight: 700; }
+
+.dark .markdown-content { color: #e8e8e5; }
+.dark .markdown-content p { color: #b0b0ad; }
+.dark .markdown-content a { color: #8eaab6; }
+.dark .markdown-content strong { color: #e8e8e5; }
+.dark .markdown-content ul,
+.dark .markdown-content ol { color: #b0b0ad; }
+.dark .markdown-content blockquote { color: #929290; border-left-color: #8eaab6; }
+.dark .markdown-content code { background: rgba(142, 170, 182, 0.15); }
+.dark .markdown-content pre { background: #111110; color: #e8e8e5; }
+.dark .markdown-content hr { border-top-color: #3a3a38; }
+.dark .markdown-content th,
+.dark .markdown-content td { border-color: #3a3a38; }
+.dark .markdown-content th { background: rgba(142, 170, 182, 0.1); }
 
 /* Portfolio 버튼 — 무지개 회전 테두리 */
 @property --rainbow-angle {
