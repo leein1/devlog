@@ -5,11 +5,12 @@ import MobileBottomNav from './components/layout/MobileBottomNav';
 import HomePage from './pages/HomePage';
 import PostDetailPage from './pages/PostDetailPage';
 import WritePostPage from './pages/WritePostPage';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
 // type Page = 'home' | 'post' | 'write';
 
 export default function App() {
+  const location = useLocation();
   // const [page, setPage] = useState<Page>('home');
   // const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
 
