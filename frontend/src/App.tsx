@@ -14,7 +14,7 @@ export default function App() {
   // const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
 
   return (
-    <div className="bg-[#f6f6f3] text-[#1c1c1a] min-h-screen">
+    <div className="bg-background text-on-background min-h-screen">
       {/*<TopNavBar onWrite={() => { setSelectedPostId(null); setPage('write'); }} />*/}
       {/*<div className="flex pt-24 gap-0 max-w-[1920px] mx-auto">*/}
       {/*  <LeftSideBar />*/}

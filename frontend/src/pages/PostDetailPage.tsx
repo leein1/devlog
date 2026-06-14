@@ -88,7 +88,7 @@ export default function PostDetailPage( ) {
 
   if (error) return (
     <main className="flex-1 min-w-0 pb-20 px-12 flex items-center justify-center">
-      <p className="text-[#797976] font-medium">
+      <p className="text-outline font-medium">
         게시글을 불러올 수 없습니다
       </p>
     </main>
@@ -120,7 +120,7 @@ export default function PostDetailPage( ) {
         {/* 뒤로 가기 */}
         {/*<button*/}
         {/*  onClick={onBack}*/}
-        {/*  className="mb-8 inline-flex items-center gap-1.5 text-sm font-bold text-[#5c6e78] hover:text-[#4a5a63] transition-colors"*/}
+        {/*  className="mb-8 inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:text-primary-container transition-colors"*/}
         {/*>*/}
         {/*  <span className="material-symbols-outlined text-[18px]">arrow_back</span>*/}
         {/*  목록으로*/}
@@ -128,7 +128,7 @@ export default function PostDetailPage( ) {
         <div className="mb-8 flex items-center justify-between">
           <button
             onClick={() => navigate('/')}
-            className="inline-flex items-center gap-1.5 text-sm font-bold text-[#5c6e78] hover:text-[#4a5a63] transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:text-primary-container transition-colors"
           >
             <span className="material-symbols-outlined text-[18px]">arrow_back</span>
             목록으로
@@ -136,7 +136,7 @@ export default function PostDetailPage( ) {
           <div className="flex items-center gap-2">
             <button
               onClick={() => postId && navigate(`/write/${id}`)}
-              className="px-4 py-1.5 text-sm font-bold text-[#5c6e78] hover:text-[#4a5a63] transition-colors"
+              className="px-4 py-1.5 text-sm font-bold text-primary hover:text-primary-container transition-colors"
             >
               수정
             </button>
@@ -152,18 +152,18 @@ export default function PostDetailPage( ) {
         {/* 헤더 */}
         <header className="mb-10 space-y-5">
           <div className="flex items-center gap-3">
-            <span className="text-xs font-bold text-[#5c6e78] tracking-widest uppercase">
+            <span className="text-xs font-bold text-primary tracking-widest uppercase">
               {post?.categoryName}
             </span>
-            <span className="w-1 h-1 rounded-full bg-[#c8c8c5]" />
-            <time className="text-xs font-medium text-[#797976]">{post ? formatDate(post.createdAt) : ''}</time>
-            <span className="w-1 h-1 rounded-full bg-[#c8c8c5]" />
-            <span className="text-xs font-medium text-[#797976]">
+            <span className="w-1 h-1 rounded-full bg-outline-variant" />
+            <time className="text-xs font-medium text-outline">{post ? formatDate(post.createdAt) : ''}</time>
+            <span className="w-1 h-1 rounded-full bg-outline-variant" />
+            <span className="text-xs font-medium text-outline">
               조회 {post?.viewCount ?? 0}
             </span>
           </div>
 
-          <h1 className="text-5xl font-black text-[#1c1c1a] tracking-tighter leading-[1.1]">
+          <h1 className="text-5xl font-black text-on-surface tracking-tighter leading-[1.1]">
             {post?.title}
           </h1>
 
@@ -172,7 +172,7 @@ export default function PostDetailPage( ) {
             {tags.map((tag) => (
               <span
                 key={tag.id}
-                className="glass-card px-4 py-1.5 rounded-full text-sm font-semibold text-[#494946]"
+                className="glass-card px-4 py-1.5 rounded-full text-sm font-semibold text-on-surface-variant"
               >
                 #{tag.name}
               </span>
@@ -181,7 +181,7 @@ export default function PostDetailPage( ) {
         </header>
 
         {/* 구분선 */}
-        <div className="h-px bg-gradient-to-r from-transparent via-[#c8c8c5]/60 to-transparent mb-10" />
+        <div className="h-px bg-gradient-to-r from-transparent via-outline-variant/60 to-transparent mb-10" />
 
         {/* 본문 콘텐츠 */}
         <div className="markdown-content">
@@ -201,18 +201,18 @@ export default function PostDetailPage( ) {
         </div>
 
         {/* 구분선 */}
-        <div className="h-px bg-gradient-to-r from-transparent via-[#c8c8c5]/60 to-transparent my-12" />
+        <div className="h-px bg-gradient-to-r from-transparent via-outline-variant/60 to-transparent my-12" />
 
         {/* 이전 / 다음 글 */}
         <nav className="grid grid-cols-2 gap-4">
-          <div className="glass-card rounded-2xl p-5 group cursor-pointer hover:border-[#5c6e78]/25 transition-all">
-            <p className="text-xs font-bold text-[#797976] tracking-widest uppercase mb-2 flex items-center gap-1">
+          <div className="glass-card rounded-2xl p-5 group cursor-pointer hover:border-primary/25 transition-all">
+            <p className="text-xs font-bold text-outline tracking-widest uppercase mb-2 flex items-center gap-1">
               <span className="material-symbols-outlined text-[14px]">arrow_back</span>
               이전 글
             </p>
           </div>
-          <div className="glass-card rounded-2xl p-5 group cursor-pointer hover:border-[#5c6e78]/25 transition-all text-right">
-            <p className="text-xs font-bold text-[#797976] tracking-widest uppercase mb-2 flex items-center gap-1 justify-end">
+          <div className="glass-card rounded-2xl p-5 group cursor-pointer hover:border-primary/25 transition-all text-right">
+            <p className="text-xs font-bold text-outline tracking-widest uppercase mb-2 flex items-center gap-1 justify-end">
               다음 글
               <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
             </p>
@@ -220,11 +220,11 @@ export default function PostDetailPage( ) {
         </nav>
 
         {/* 구분선 */}
-        <div className="h-px bg-gradient-to-r from-transparent via-[#c8c8c5]/60 to-transparent my-12" />
+        <div className="h-px bg-gradient-to-r from-transparent via-outline-variant/60 to-transparent my-12" />
 
         {/* 댓글 섹션 */}
         <section>
-          <h2 className="text-lg font-black text-[#1c1c1a] tracking-tight mb-6">
+          <h2 className="text-lg font-black text-on-surface tracking-tight mb-6">
             댓글 {comments.length}
           </h2>
 
@@ -235,7 +235,7 @@ export default function PostDetailPage( ) {
               onChange={(e) => setCommentText(e.target.value)}
               placeholder="댓글을 입력하세요"
               rows={3}
-              className="w-full bg-transparent text-sm text-[#1c1c1a] placeholder-[#b0b0ad] resize-none outline-none"
+              className="w-full bg-transparent text-sm text-on-surface placeholder-outline-variant resize-none outline-none"
             />
             <div className="flex justify-end mt-3">
               <button
@@ -245,7 +245,7 @@ export default function PostDetailPage( ) {
                   setComments((prev) => [...prev, res.data]);
                   setCommentText('');
                 }}
-                className="px-5 py-2 rounded-full bg-[#5c6e78] text-white text-xs font-bold hover:bg-[#4a5a63] transition-colors"
+                className="px-5 py-2 rounded-full bg-primary text-on-primary text-xs font-bold hover:bg-primary-container transition-colors"
               >
                 등록
               </button>
@@ -257,9 +257,9 @@ export default function PostDetailPage( ) {
             {comments.map((c) => (
               <li key={c.id} className="glass-card rounded-2xl p-5">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-bold text-[#1c1c1a]">{c.nickname}</span>
+                  <span className="text-sm font-bold text-on-surface">{c.nickname}</span>
                   <div className="flex items-center gap-3">
-                    <time className="text-xs text-[#797976]">
+                    <time className="text-xs text-outline">
                       {new Date(c.createdAt).toLocaleDateString('ko-KR')}
                     </time>
                     <button
@@ -274,7 +274,7 @@ export default function PostDetailPage( ) {
                     </button>
                   </div>
                 </div>
-                <p className="text-sm text-[#494946] leading-relaxed">{c.content}</p>
+                <p className="text-sm text-on-surface-variant leading-relaxed">{c.content}</p>
               </li>
             ))}
           </ul>
@@ -286,14 +286,14 @@ export default function PostDetailPage( ) {
       <aside className="hidden xl:flex flex-col gap-4 w-56 sticky top-28 self-start">
         {series && (
           <div className="glass-panel rounded-2xl p-5">
-            <h3 className="text-xs font-black tracking-widest uppercase text-[#5c6e78] mb-4">
+            <h3 className="text-xs font-black tracking-widest uppercase text-primary mb-4">
               시리즈 : {series.name}
             </h3>
             <ol className="space-y-2">
               {seriesPosts.map((sp) => (
                 <li key={sp.postId} className="flex items-center gap-2">
-                  <span className="text-xs text-[#5c6e78] font-bold w-4 shrink-0">{sp.orderNum}</span>
-                  <span className={`text-xs leading-snug ${sp.postId === postId ? 'font-black text-[#1c1c1a]' : 'font-medium text-[#797976]'}`}>
+                  <span className="text-xs text-primary font-bold w-4 shrink-0">{sp.orderNum}</span>
+                  <span className={`text-xs leading-snug ${sp.postId === postId ? 'font-black text-on-surface' : 'font-medium text-outline'}`}>
                     {sp.postId === postId && '▶ '}{sp.title}
                   </span>
                 </li>
@@ -303,7 +303,7 @@ export default function PostDetailPage( ) {
         )}
 
         <div className="glass-panel rounded-2xl p-5">
-          <h3 className="text-xs font-black tracking-widest uppercase text-[#5c6e78] mb-4">
+          <h3 className="text-xs font-black tracking-widest uppercase text-primary mb-4">
             목차
           </h3>
           {headings.length > 0 && (
@@ -312,7 +312,7 @@ export default function PostDetailPage( ) {
                 <li key={`${h.id}-${h.level}`} style={{ paddingLeft: `${(h.level - 1) * 12}px` }}>
                   <button
                     onClick={() => document.getElementById(h.id)?.scrollIntoView({ behavior: 'smooth' })}
-                    className="text-xs text-[#797976] hover:text-[#1c1c1a] transition-colors leading-snug text-left w-full"
+                    className="text-xs text-outline hover:text-on-surface transition-colors leading-snug text-left w-full"
                   >
                     {h.text}
                   </button>
