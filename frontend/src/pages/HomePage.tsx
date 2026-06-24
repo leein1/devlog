@@ -25,38 +25,38 @@ import { useNavigate } from 'react-router-dom';
 //   onReadPost: (id:number) => void;
 // }
 
-export default function HomePage( ) {
-
+export default function HomePage() {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<PostResponse[]>([]);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     fetchPostList()
-        .then((res) => setPosts(res.data))
-        .catch(() => setError(true));
-  },[]);
+      .then((res) => setPosts(res.data))
+      .catch(() => setError(true));
+  }, []);
 
   const featuredPost = posts[0];
   const recentPosts = posts.slice(1);
 
   const formatDate = (dateStr: string) =>
-    new Date(dateStr).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-
+    new Date(dateStr).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
 
   const truncate = (text: string, max = 120) =>
     text.length > max ? text.slice(0, max) + '...' : text;
 
-  if (error) return (
+  if (error)
+    return (
       <main className="flex-1 min-w-0 pb-20 px-12 flex items-center justify-center">
-        <p className="text-outline font-medium">
-          게시글을 불러올 수 없습니다
-        </p>
+        <p className="text-outline font-medium">게시글을 불러올 수 없습니다</p>
       </main>
-  );
+    );
 
   return (
-
     <main className="flex-1 min-w-0 pb-20 px-12">
       {/* Featured Post */}
       <section className="mb-12">
@@ -89,7 +89,7 @@ export default function HomePage( ) {
             <div className="pt-2">
               <button
                 // onClick={onReadPost}
-                onClick={() => featuredPost && navigate(  `/post/${featuredPost.id}`)}
+                onClick={() => featuredPost && navigate(`/post/${featuredPost.id}`)}
                 className="bg-primary text-on-primary px-8 py-4 rounded-full font-bold flex items-center gap-2 group/btn transition-all hover:bg-primary-container active:scale-95 shadow-[0_8px_24px_rgba(92,110,120,0.28)]"
               >
                 Read the Full Story
@@ -105,19 +105,28 @@ export default function HomePage( ) {
       {/* Recent Posts */}
       <div className="space-y-1">
         {recentPosts.map((post) => (
-          <article key={post.id} className="group cursor-pointer" onClick={() => navigate(`/post/${post.id}`)}>
+          <article
+            key={post.id}
+            className="group cursor-pointer"
+            onClick={() => navigate(`/post/${post.id}`)}
+          >
             <div className="p-8 rounded-2xl transition-all hover:glass-card space-y-4">
               <div className="flex items-center gap-3">
                 <span className="text-xs font-bold text-primary tracking-widest uppercase">
                   {post.categoryName}
                 </span>
                 <span className="w-1 h-1 rounded-full bg-outline-variant" />
-                <time className="text-xs font-medium text-outline"> {formatDate(post.createdAt)} </time>
+                <time className="text-xs font-medium text-outline">
+                  {' '}
+                  {formatDate(post.createdAt)}{' '}
+                </time>
               </div>
               <h2 className="text-3xl font-extrabold tracking-tight text-on-surface group-hover:text-primary transition-colors leading-tight">
                 {post.title}
               </h2>
-              <p className="text-on-surface-variant font-medium leading-relaxed">{truncate(post.content)}</p>
+              <p className="text-on-surface-variant font-medium leading-relaxed">
+                {truncate(post.content)}
+              </p>
               <div className="pt-1">
                 <span className="inline-flex items-center gap-1 text-sm font-bold text-primary opacity-0 group-hover:opacity-100 transition-opacity">
                   Read more

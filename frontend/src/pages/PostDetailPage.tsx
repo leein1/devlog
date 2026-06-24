@@ -18,9 +18,11 @@ import {
 } from '../api/posts';
 import { useParams, useNavigate } from 'react-router-dom';
 
-
 const slugify = (text: string) =>
-  text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+  text
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w-]/g, '');
 
 // interface PostDetailPageProps {
 //   postId: number | null;
@@ -28,8 +30,7 @@ const slugify = (text: string) =>
 //   onEdit: (id: number) => void;
 // }
 
-export default function PostDetailPage( ) {
-
+export default function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
   const postId = Number(id);
   const navigate = useNavigate();
@@ -46,12 +47,20 @@ export default function PostDetailPage( ) {
     const controller = new AbortController();
 
     fetchPost(postId, controller.signal)
-        .then((res) => { setPost(res.data); })
-        .catch((err) => { if (err?.code !== 'ERR_CANCELED') setError(true); });
+      .then((res) => {
+        setPost(res.data);
+      })
+      .catch((err) => {
+        if (err?.code !== 'ERR_CANCELED') setError(true);
+      });
 
     fetchPostTags(postId, controller.signal)
-        .then((res) => { setTags(res.data); })
-        .catch((err) => { if (err?.code !== 'ERR_CANCELED') setError(true); });
+      .then((res) => {
+        setTags(res.data);
+      })
+      .catch((err) => {
+        if (err?.code !== 'ERR_CANCELED') setError(true);
+      });
 
     return () => controller.abort();
   }, [postId]);
@@ -61,18 +70,18 @@ export default function PostDetailPage( ) {
     const controller = new AbortController();
 
     fetchPostSeries(postId, controller.signal)
-        .then((res) => {
-          if (res.data.length === 0) return;
-          const firstSeries = res.data[0];
-          setSeries(firstSeries);
-          return fetchSeriesPosts(firstSeries.id, controller.signal);
-        })
-        .then((res) => {
-          if (res) setSeriesPosts(res.data);
-        })
-        .catch((err) => {
-          if (err?.code !== 'ERR_CANCELED') setError(true);
-        });
+      .then((res) => {
+        if (res.data.length === 0) return;
+        const firstSeries = res.data[0];
+        setSeries(firstSeries);
+        return fetchSeriesPosts(firstSeries.id, controller.signal);
+      })
+      .then((res) => {
+        if (res) setSeriesPosts(res.data);
+      })
+      .catch((err) => {
+        if (err?.code !== 'ERR_CANCELED') setError(true);
+      });
 
     return () => controller.abort();
   }, [postId]);
@@ -82,38 +91,46 @@ export default function PostDetailPage( ) {
     const controller = new AbortController();
 
     fetchComment(postId, controller.signal)
-        .then((res) => setComments(res.data))
-        .catch((err) => { if (err?.code !== 'ERR_CANCELED') setError(true); });
+      .then((res) => setComments(res.data))
+      .catch((err) => {
+        if (err?.code !== 'ERR_CANCELED') setError(true);
+      });
 
     return () => controller.abort();
   }, [postId]);
 
-  if (error) return (
-    <main className="flex-1 min-w-0 pb-20 px-12 flex items-center justify-center">
-      <p className="text-outline font-medium">
-        게시글을 불러올 수 없습니다
-      </p>
-    </main>
-  );
+  if (error)
+    return (
+      <main className="flex-1 min-w-0 pb-20 px-12 flex items-center justify-center">
+        <p className="text-outline font-medium">게시글을 불러올 수 없습니다</p>
+      </main>
+    );
 
   const handleDelete = async () => {
-    if (!postId || !window.confirm("게시글을 삭제하시겠습니까?")) return;
+    if (!postId || !window.confirm('게시글을 삭제하시겠습니까?')) return;
     await deletePost(postId);
     navigate('/');
   };
 
-  const headings = useMemo(() =>
-    (post?.content ?? '').split('\n')
-      .filter(line => /^#{1,6}\s/.test(line))
-      .map(line => ({
-        level: line.match(/^(#+)/)?.[1].length ?? 1,
-        text: line.replace(/^#+\s+/, ''),
-        id: slugify(line.replace(/^#+\s+/, '')),
-      })),
-  [post?.content]);
+  const headings = useMemo(
+    () =>
+      (post?.content ?? '')
+        .split('\n')
+        .filter((line) => /^#{1,6}\s/.test(line))
+        .map((line) => ({
+          level: line.match(/^(#+)/)?.[1].length ?? 1,
+          text: line.replace(/^#+\s+/, ''),
+          id: slugify(line.replace(/^#+\s+/, '')),
+        })),
+    [post?.content]
+  );
 
   const formatDate = (dateStr: string) =>
-    new Date(dateStr).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    new Date(dateStr).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
 
   return (
     <main className="flex-1 min-w-0 pb-20 px-12 flex gap-8">
@@ -158,11 +175,11 @@ export default function PostDetailPage( ) {
               {post?.categoryName}
             </span>
             <span className="w-1 h-1 rounded-full bg-outline-variant" />
-            <time className="text-xs font-medium text-outline">{post ? formatDate(post.createdAt) : ''}</time>
+            <time className="text-xs font-medium text-outline">
+              {post ? formatDate(post.createdAt) : ''}
+            </time>
             <span className="w-1 h-1 rounded-full bg-outline-variant" />
-            <span className="text-xs font-medium text-outline">
-              조회 {post?.viewCount ?? 0}
-            </span>
+            <span className="text-xs font-medium text-outline">조회 {post?.viewCount ?? 0}</span>
           </div>
 
           <h1 className="text-5xl font-black text-on-surface tracking-tighter leading-[1.1]">
@@ -190,12 +207,12 @@ export default function PostDetailPage( ) {
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
-              h1: ({children}) => <h1 id={slugify(String(children))}>{children}</h1>,
-              h2: ({children}) => <h2 id={slugify(String(children))}>{children}</h2>,
-              h3: ({children}) => <h3 id={slugify(String(children))}>{children}</h3>,
-              h4: ({children}) => <h4 id={slugify(String(children))}>{children}</h4>,
-              h5: ({children}) => <h5 id={slugify(String(children))}>{children}</h5>,
-              h6: ({children}) => <h6 id={slugify(String(children))}>{children}</h6>,
+              h1: ({ children }) => <h1 id={slugify(String(children))}>{children}</h1>,
+              h2: ({ children }) => <h2 id={slugify(String(children))}>{children}</h2>,
+              h3: ({ children }) => <h3 id={slugify(String(children))}>{children}</h3>,
+              h4: ({ children }) => <h4 id={slugify(String(children))}>{children}</h4>,
+              h5: ({ children }) => <h5 id={slugify(String(children))}>{children}</h5>,
+              h6: ({ children }) => <h6 id={slugify(String(children))}>{children}</h6>,
             }}
           >
             {post?.content ?? ''}
@@ -215,8 +232,7 @@ export default function PostDetailPage( ) {
           </div>
           <div className="glass-card rounded-2xl p-5 group cursor-pointer hover:border-primary/25 transition-all text-right">
             <p className="text-xs font-bold text-outline tracking-widest uppercase mb-2 flex items-center gap-1 justify-end">
-              다음 글
-              <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+              다음 글<span className="material-symbols-outlined text-[14px]">arrow_forward</span>
             </p>
           </div>
         </nav>
@@ -281,7 +297,6 @@ export default function PostDetailPage( ) {
             ))}
           </ul>
         </section>
-
       </article>
 
       {/* 목차 사이드바 (데스크톱) */}
@@ -295,8 +310,11 @@ export default function PostDetailPage( ) {
               {seriesPosts.map((sp) => (
                 <li key={sp.postId} className="flex items-center gap-2">
                   <span className="text-xs text-primary font-bold w-4 shrink-0">{sp.orderNum}</span>
-                  <span className={`text-xs leading-snug ${sp.postId === postId ? 'font-black text-on-surface' : 'font-medium text-outline'}`}>
-                    {sp.postId === postId && '▶ '}{sp.title}
+                  <span
+                    className={`text-xs leading-snug ${sp.postId === postId ? 'font-black text-on-surface' : 'font-medium text-outline'}`}
+                  >
+                    {sp.postId === postId && '▶ '}
+                    {sp.title}
                   </span>
                 </li>
               ))}
@@ -305,15 +323,15 @@ export default function PostDetailPage( ) {
         )}
 
         <div className="glass-panel rounded-2xl p-5">
-          <h3 className="text-xs font-black tracking-widest uppercase text-primary mb-4">
-            목차
-          </h3>
+          <h3 className="text-xs font-black tracking-widest uppercase text-primary mb-4">목차</h3>
           {headings.length > 0 && (
             <ul className="space-y-2">
               {headings.map((h) => (
                 <li key={`${h.id}-${h.level}`} style={{ paddingLeft: `${(h.level - 1) * 12}px` }}>
                   <button
-                    onClick={() => document.getElementById(h.id)?.scrollIntoView({ behavior: 'smooth' })}
+                    onClick={() =>
+                      document.getElementById(h.id)?.scrollIntoView({ behavior: 'smooth' })
+                    }
                     className="text-xs text-outline hover:text-on-surface transition-colors leading-snug text-left w-full"
                   >
                     {h.text}

@@ -2,9 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function TopNavBar() {
-  const [dark, setDark] = useState(
-    () => localStorage.getItem('theme') === 'dark'
-  );
+  const [dark, setDark] = useState(() => localStorage.getItem('theme') === 'dark');
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark);
@@ -18,7 +16,10 @@ export default function TopNavBar() {
           devlog
         </Link>
         <div className="hidden md:flex gap-2 items-center">
-          <Link to="/" className="text-primary font-bold px-4 py-1.5 rounded-full bg-primary/8 border border-primary/15">
+          <Link
+            to="/"
+            className="text-primary font-bold px-4 py-1.5 rounded-full bg-primary/8 border border-primary/15"
+          >
             게시글
           </Link>
           <a
@@ -37,7 +38,10 @@ export default function TopNavBar() {
       </div>
       <div className="flex items-center gap-4">
         <div className="rainbow-border group hidden md:block">
-          <Link to="/portfolio" className="relative z-[1] inline-flex items-center gap-1.5 px-5 py-2 rounded-full font-bold text-sm text-on-surface whitespace-nowrap bg-surface-container-low border border-outline-variant">
+          <Link
+            to="/portfolio"
+            className="relative z-[1] inline-flex items-center gap-1.5 px-5 py-2 rounded-full font-bold text-sm text-on-surface whitespace-nowrap bg-surface-container-low border border-outline-variant"
+          >
             Portfolio
           </Link>
           <span className="pointer-events-none absolute left-1/2 top-full mt-2 -translate-x-1/2 whitespace-nowrap rounded-full border border-outline-variant bg-surface-container-low px-3 py-1 text-xs text-on-surface-variant opacity-0 shadow-sm transition-opacity duration-300 group-hover:opacity-100">

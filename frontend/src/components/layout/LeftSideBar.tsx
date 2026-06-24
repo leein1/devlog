@@ -17,11 +17,15 @@ export default function LeftSideBar() {
         <div className="flex gap-3 w-full justify-center">
           <div className="glass-card rounded-2xl px-4 py-2 flex flex-col items-center">
             <span className="text-lg font-black text-primary">24</span>
-            <span className="text-[10px] text-outline font-medium uppercase tracking-wider">Posts</span>
+            <span className="text-[10px] text-outline font-medium uppercase tracking-wider">
+              Posts
+            </span>
           </div>
           <div className="glass-card rounded-2xl px-4 py-2 flex flex-col items-center">
             <span className="text-lg font-black text-primary">3</span>
-            <span className="text-[10px] text-outline font-medium uppercase tracking-wider">Series</span>
+            <span className="text-[10px] text-outline font-medium uppercase tracking-wider">
+              Series
+            </span>
           </div>
         </div>
       </div>

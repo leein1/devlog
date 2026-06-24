@@ -66,14 +66,12 @@ export interface PostRequest {
   tagIdList?: number[];
 }
 
-export const createPost = (data: PostRequest) =>
-  apiClient.post<PostResponse>('/posts', data);
+export const createPost = (data: PostRequest) => apiClient.post<PostResponse>('/posts', data);
 
 export const updatePost = (id: number, data: PostRequest) =>
   apiClient.put<PostResponse>(`/posts/${id}`, data);
 
-export const deletePost = (id: number) =>
-  apiClient.delete<PostResponse>(`/posts/${id}`);
+export const deletePost = (id: number) => apiClient.delete<PostResponse>(`/posts/${id}`);
 
 // 게시글이 속한 시리즈 목록
 export const fetchPostSeries = (postId: number, signal?: AbortSignal) =>
@@ -88,8 +86,7 @@ export interface CategoryResponse {
   name: string;
 }
 
-export const fetchAllCategories = () =>
-  apiClient.get<CategoryResponse[]>('/categories');
+export const fetchAllCategories = () => apiClient.get<CategoryResponse[]>('/categories');
 
 export const fetchAllTags = () => apiClient.get<TagResponse[]>('/tags');
 
