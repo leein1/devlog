@@ -35,6 +35,14 @@ export interface CommentRequest {
   userId: number;
 }
 
+export interface PageResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  number: number; //현재 페이지
+  size: number;
+}
+
 export const fetchComment = (postId: number, signal?: AbortSignal) =>
   apiClient.get<CommentResponse[]>(`/posts/${postId}/comments`, { signal });
 
@@ -44,8 +52,11 @@ export const createComment = (postId: number, data: CommentRequest) =>
 export const deleteComment = (postId: number, commentId: number) =>
   apiClient.delete(`/posts/${postId}/comments/${commentId}`);
 
-export const fetchPostList = (cursor?: number, size = 10) =>
-  apiClient.get<PostResponse[]>('/posts', { params: { cursor, size } });
+// export const fetchPostList = (cursor?: number, size = 10) =>
+//   apiClient.get<PostResponse[]>('/posts', { params: { cursor, size } });
+
+export const fetchPostList = (page = 0, size = 10) =>
+  apiClient.get<PageResponse<PostResponse>>(`/posts`, { params: { page, size } });
 
 export interface TagResponse {
   id: number;

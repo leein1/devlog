@@ -29,12 +29,17 @@ export default function HomePage() {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<PostResponse[]>([]);
   const [error, setError] = useState(false);
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
-    fetchPostList()
-      .then((res) => setPosts(res.data))
+    fetchPostList(page)
+      .then((res) => {
+        setPosts(res.data.content);
+        setTotalPages(res.data.totalPages);
+      })
       .catch(() => setError(true));
-  }, []);
+  }, [page]);
 
   const featuredPost = posts[0];
   const recentPosts = posts.slice(1);
@@ -139,6 +144,27 @@ export default function HomePage() {
             <div className="h-px mx-8 bg-gradient-to-r from-transparent via-outline-variant/50 to-transparent" />
           </article>
         ))}
+      </div>
+
+      {/* Pagination */}
+      <div className="flex items-center justify-center gap-4 mt-8">
+        <button
+          disabled={page === 0}
+          onClick={() => setPage((p) => p - 1)}
+          className="px-5 py-2.5 rounded-full font-bold text-sm text-on-surface-variant transition-all hover:glass-card disabled:opacity-40 disabled:pointer-events-none"
+        >
+          이전
+        </button>
+        <span className="text-xs font-medium text-outline">
+          {totalPages === 0 ? 0 : page + 1} / {totalPages}
+        </span>
+        <button
+          disabled={page + 1 >= totalPages}
+          onClick={() => setPage((p) => p + 1)}
+          className="px-5 py-2.5 rounded-full font-bold text-sm text-on-surface-variant transition-all hover:glass-card disabled:opacity-40 disabled:pointer-events-none"
+        >
+          다음
+        </button>
       </div>
     </main>
   );
