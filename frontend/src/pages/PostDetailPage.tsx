@@ -5,6 +5,7 @@ import {
   fetchPost,
   fetchPostTags,
   fetchSeriesPosts,
+  fetchNearbyPosts,
   type PostResponse,
   type SeriesResponse,
   type TagResponse,
@@ -41,6 +42,7 @@ export default function PostDetailPage() {
   const [seriesPosts, setSeriesPosts] = useState<PostSeriesResponse[]>([]);
   const [comments, setComments] = useState<CommentResponse[]>([]);
   const [commentText, setCommentText] = useState('');
+  const [nearbyPosts, setNearbyPosts] = useState<PostResponse[]>([]);
 
   useEffect(() => {
     if (!postId) return;
@@ -57,6 +59,23 @@ export default function PostDetailPage() {
     fetchPostTags(postId, controller.signal)
       .then((res) => {
         setTags(res.data);
+      })
+      .catch((err) => {
+        if (err?.code !== 'ERR_CANCELED') setError(true);
+      });
+
+    return () => controller.abort();
+  }, [postId]);
+
+  useEffect(() => {
+    if (!postId) return;
+    const controller = new AbortController();
+    setNearbyPosts([]);
+
+    fetchNearbyPosts(postId, 2, controller.signal)
+      .then((res) => {
+        if (controller.signal.aborted) return;
+        setNearbyPosts(res.data);
       })
       .catch((err) => {
         if (err?.code !== 'ERR_CANCELED') setError(true);
@@ -124,6 +143,8 @@ export default function PostDetailPage() {
         })),
     [post?.content]
   );
+
+  const nearbyList = post ? [...nearbyPosts, post].sort((a, b) => a.id - b.id) : [];
 
   const formatDate = (dateStr: string) =>
     new Date(dateStr).toLocaleDateString('en-US', {
@@ -222,20 +243,31 @@ export default function PostDetailPage() {
         {/* 구분선 */}
         <div className="h-px bg-gradient-to-r from-transparent via-outline-variant/60 to-transparent my-12" />
 
-        {/* 이전 / 다음 글 */}
-        <nav className="grid grid-cols-2 gap-4">
-          <div className="glass-card rounded-2xl p-5 group cursor-pointer hover:border-primary/25 transition-all">
-            <p className="text-xs font-bold text-outline tracking-widest uppercase mb-2 flex items-center gap-1">
-              <span className="material-symbols-outlined text-[14px]">arrow_back</span>
-              이전 글
+        {/* 인접 글 목록 */}
+        {nearbyList.length > 1 && (
+          <nav className="glass-card rounded-2xl p-5">
+            <p className="text-xs font-bold text-outline tracking-widest uppercase mb-3">
+              인접 글
             </p>
-          </div>
-          <div className="glass-card rounded-2xl p-5 group cursor-pointer hover:border-primary/25 transition-all text-right">
-            <p className="text-xs font-bold text-outline tracking-widest uppercase mb-2 flex items-center gap-1 justify-end">
-              다음 글<span className="material-symbols-outlined text-[14px]">arrow_forward</span>
-            </p>
-          </div>
-        </nav>
+            <ul className="space-y-2">
+              {nearbyList.map((p) => (
+                <li key={p.id}>
+                  <button
+                    onClick={() => p.id !== postId && navigate(`/post/${p.id}`)}
+                    className={`w-full text-left text-sm truncate transition-colors ${
+                      p.id === postId
+                        ? 'font-black text-on-surface cursor-default'
+                        : 'font-medium text-outline hover:text-on-surface'
+                    }`}
+                  >
+                    {p.id === postId && '▶ '}
+                    {p.title}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
 
         {/* 구분선 */}
         <div className="h-px bg-gradient-to-r from-transparent via-outline-variant/60 to-transparent my-12" />

@@ -5,9 +5,14 @@ import kr.leeinwon.devlog.domain.series.PostSeriesRepository;
 import kr.leeinwon.devlog.domain.series.SeriesResponse;
 import kr.leeinwon.devlog.domain.series.SeriesService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -26,7 +31,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponse> getPost(@PathVariable Long id){
+    public ResponseEntity<PostResponse> getPost(@PathVariable Long id) {
         return ResponseEntity.ok(postService.getPost(id));
     }
 
@@ -35,32 +40,49 @@ public class PostController {
 //        return ResponseEntity.ok(postService.getAllPost());
 //    }
 
+//    @GetMapping
+//    public ResponseEntity<List<PostResponse>> getPosts(
+//            @RequestParam(required = false) Long cursor,
+//            @RequestParam(defaultValue = "10") int size,
+//            @RequestParam(required = false) Long categoryId,
+//            @RequestParam(required = false) String tagName,
+//            @RequestParam(required = false) String keyword){
+//
+//        return  ResponseEntity.ok(postService.getAllPosts(cursor, size,
+//                categoryId, tagName, keyword));
+//
+//    }
+
     @GetMapping
-    public ResponseEntity<List<PostResponse>> getPosts(
-            @RequestParam(required = false) Long cursor,
+    public ResponseEntity<Page<PostResponse>> getPosts(
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) String tagName,
-            @RequestParam(required = false) String keyword){
+            @RequestParam(required = false) String keyword) {
 
-        return  ResponseEntity.ok(postService.getAllPosts(cursor, size,
-                categoryId, tagName, keyword));
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(postService.getAllPosts(pageable, categoryId, tagName, keyword));
+    }
 
+    @GetMapping("/{id}/nearby")
+    public ResponseEntity<List<PostResponse>> getNearbyPosts(@PathVariable Long id, @RequestParam(defaultValue = "2") int n) {
+        return ResponseEntity.ok(postService.getNearbyPosts(id, n));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostResponse> updatePost(@PathVariable Long id, @Valid @RequestBody PostRequest postRequest){
+    public ResponseEntity<PostResponse> updatePost(@PathVariable Long id, @Valid @RequestBody PostRequest postRequest) {
         return ResponseEntity.ok(postService.updatePost(id, postRequest));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<PostResponse> deletePost(@PathVariable Long id){
+    public ResponseEntity<PostResponse> deletePost(@PathVariable Long id) {
         postService.deletePost(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{postId}/series")
-    public ResponseEntity<List<SeriesResponse>> getSeries(@PathVariable Long postId){
+    public ResponseEntity<List<SeriesResponse>> getSeries(@PathVariable Long postId) {
         return ResponseEntity.ok(seriesService.getSeriesByPostId(postId));
     }
 

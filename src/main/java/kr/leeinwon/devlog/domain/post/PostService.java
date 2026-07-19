@@ -11,6 +11,8 @@ import kr.leeinwon.devlog.domain.tag.PostTagRepository;
 import kr.leeinwon.devlog.domain.tag.Tag;
 import kr.leeinwon.devlog.domain.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +36,7 @@ public class PostService {
     private static final Long DEFAULT_CATEGORY_ID = 1L;
 
     @Transactional
-    public PostResponse createPost(PostRequest request){
+    public PostResponse createPost(PostRequest request) {
 
         /*
         카테고리 DEFAULT값 정책 통일 필요
@@ -54,8 +56,8 @@ public class PostService {
         Post savedPost = postRepository.save(post);
 
         // 태그
-        if(request.getTagIdList() != null &&   !request.getTagIdList().isEmpty()){
-            for(Long tagId : request.getTagIdList()){
+        if (request.getTagIdList() != null && !request.getTagIdList().isEmpty()) {
+            for (Long tagId : request.getTagIdList()) {
                 Tag tag = tagRepository.findById(tagId).orElseThrow(
                         () -> new IllegalArgumentException("존재하지 않는 태그입니다")
                 );
@@ -68,11 +70,11 @@ public class PostService {
             }
         }
         // 시리즈
-        if(request.getSeriesId() != null){
+        if (request.getSeriesId() != null) {
             Series series = seriesRepository.findById(request.getSeriesId()).orElseThrow(
                     () -> new IllegalArgumentException("존재하지 않는 시리즈 입니다")
             );
-            int orderNum = postSeriesRepository.countBySeriesId(request.getSeriesId())+1;
+            int orderNum = postSeriesRepository.countBySeriesId(request.getSeriesId()) + 1;
             postSeriesRepository.save(
                     PostSeries.builder()
                             .post(savedPost)
@@ -87,7 +89,7 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponse getPost(Long id){
+    public PostResponse getPost(Long id) {
         postRepository.incrementViewCount(id);
 
         Post post = postRepository.findById(id).orElseThrow(
@@ -96,22 +98,36 @@ public class PostService {
         return new PostResponse(post);
     }
 
-    public List<PostResponse> getAllPosts(Long cursor, int size
-            ,Long categoryId, String tagName, String keyword){
+//    public List<PostResponse> getAllPosts(Long cursor, int size
+//            ,Long categoryId, String tagName, String keyword){
+//
+//        return postRepository.searchPosts(cursor,size,categoryId,tagName,keyword)
+//                .stream()
+//                .map(PostResponse::new)
+//                .collect(Collectors.toList());
+//    }
 
-        return postRepository.searchPosts(cursor,size,categoryId,tagName,keyword)
+    public Page<PostResponse> getAllPosts(Pageable pageable, Long categoryId, String tagName, String keyword) {
+
+        return postRepository.searchPosts(pageable, categoryId, tagName, keyword)
+                .map(PostResponse::new);
+    }
+
+    public List<PostResponse> getNearbyPosts(Long postId, int n) {
+
+        return postRepository.findNearbyPosts(postId, n)
                 .stream()
                 .map(PostResponse::new)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public PostResponse updatePost(Long id, PostRequest request){
+    public PostResponse updatePost(Long id, PostRequest request) {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다")
         );
 
-        Long  categoryId = request.getCategoryId() != null
+        Long categoryId = request.getCategoryId() != null
                 ? request.getCategoryId()
                 : DEFAULT_CATEGORY_ID;
 
@@ -120,8 +136,8 @@ public class PostService {
 
         //태그 전체 교체
         postTagRepository.deleteByPostId(id);
-        if(request.getTagIdList() != null &&  !request.getTagIdList().isEmpty()){
-            for(Long tagId : request.getTagIdList()){
+        if (request.getTagIdList() != null && !request.getTagIdList().isEmpty()) {
+            for (Long tagId : request.getTagIdList()) {
                 Tag tag = tagRepository.findById(tagId).orElseThrow(
                         () -> new IllegalArgumentException("존재하지 않는 태그입니다")
                 );
@@ -134,9 +150,9 @@ public class PostService {
         }
         //시리즈 전체 교체
         postSeriesRepository.deleteByPostId(id);
-        if(request.getSeriesId() != null) {
+        if (request.getSeriesId() != null) {
             Series series = seriesRepository.findById(request.getSeriesId()).orElseThrow(
-                    () -> new IllegalArgumentException("존재하지 않는 시리즈 입니다" )
+                    () -> new IllegalArgumentException("존재하지 않는 시리즈 입니다")
             );
             int orderNum = postSeriesRepository.countBySeriesId(request.getSeriesId()) + 1;
             postSeriesRepository.save(
@@ -151,7 +167,7 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePost(Long id){
+    public void deletePost(Long id) {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다")
         );
