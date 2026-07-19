@@ -113,6 +113,14 @@ public class PostService {
                 .map(PostResponse::new);
     }
 
+    public List<PostResponse> getNearbyPosts(Long postId, int n) {
+
+        return postRepository.findNearbyPosts(postId, n)
+                .stream()
+                .map(PostResponse::new)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public PostResponse updatePost(Long id, PostRequest request) {
         Post post = postRepository.findById(id).orElseThrow(

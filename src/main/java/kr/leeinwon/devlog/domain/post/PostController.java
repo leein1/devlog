@@ -65,6 +65,11 @@ public class PostController {
         return ResponseEntity.ok(postService.getAllPosts(pageable, categoryId, tagName, keyword));
     }
 
+    @GetMapping("/{id}/nearby")
+    public ResponseEntity<List<PostResponse>> getNearbyPosts(@PathVariable Long id, @RequestParam(defaultValue = "2") int n) {
+        return ResponseEntity.ok(postService.getNearbyPosts(id, n));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<PostResponse> updatePost(@PathVariable Long id, @Valid @RequestBody PostRequest postRequest) {
         return ResponseEntity.ok(postService.updatePost(id, postRequest));
