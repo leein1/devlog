@@ -66,6 +66,9 @@ export interface TagResponse {
 export const fetchPost = (id: number, signal?: AbortSignal) =>
   apiClient.get<PostResponse>(`/posts/${id}`, { signal });
 
+export const fetchNearbyPosts = (id: number, n = 2, signal?: AbortSignal) =>
+  apiClient.get<PostResponse[]>(`/posts/${id}/nearby`, { params: { n }, signal });
+
 export const fetchPostTags = (postId: number, signal?: AbortSignal) =>
   apiClient.get<TagResponse[]>(`/posts/${postId}/tags`, { signal });
 
