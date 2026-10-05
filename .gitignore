@@ -39,3 +39,4 @@ out/
 ### AI ###
 CLAUDE.md
 CLAUDE.md.bak
+.claude/settings.local.json
