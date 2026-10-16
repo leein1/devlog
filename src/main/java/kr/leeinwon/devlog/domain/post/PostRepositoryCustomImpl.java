@@ -111,8 +111,7 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
     }
 
 
-    //  N _+ 1  발생지점
-    // Category Join 존재하지 않음. searchPosts(), searchPostOld() 엔 leftJoin(...).fetchJoin() 존재
+    // category는 fetchJoin으로 함께 로딩 — 빠뜨리면 PostResponse 변환 시 N+1 (2026-07 실제 발생)
     @Override
     public List<Post> findNearbyPosts(Long id, int n) {
 
