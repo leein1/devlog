@@ -1,4 +1,4 @@
-package kr.leeinwon.devlog.domain.tag.service;
+package kr.leeinwon.devlog.domain.tag;
 
 import kr.leeinwon.devlog.domain.post.Post;
 import kr.leeinwon.devlog.domain.post.PostRepository;

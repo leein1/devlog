@@ -1,4 +1,4 @@
-//package kr.leeinwon.devlog.domain.post.service;
+//package kr.leeinwon.devlog.domain.post;
 //
 //import kr.leeinwon.devlog.domain.category.Category;
 //import kr.leeinwon.devlog.domain.category.CategoryService;
